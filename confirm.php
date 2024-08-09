@@ -2,16 +2,14 @@
 <?php
     session_start();
 
+    if(!isset($_SESSION['errors2'])) {
+        header('Location: select-plan.php');
+    }
+
     $jumpFrom = $_SERVER['HTTP_REFERER'];
     
 if (strpos($jumpFrom, 'select-plan.php') !== false) {
 // ====================ここからselect-planでの入力が正しいか====================
-    // if(!isset($_SESSION['phase-index'])) {
-    //     header('Location: index.php');
-    // } elseif(!isset($_SESSION['phase-select-plan'])) {
-    //     header('Location: select-plan.php');
-    // }
-
     $formError2 = false;
     $_SESSION['errors2'] = [];
 
@@ -88,7 +86,7 @@ function couponFormat($text) {
     }
 }
 
-if($formError2 || !isset($_SESSION['errors2'])) {
+if($formError2) {
     header('Location: select-plan.php');
 }
 

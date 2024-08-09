@@ -2,8 +2,12 @@
 <?php
     session_start();
 
+    if(!isset($_SESSION['errors'])) {
+        header('Location: index.php');
+    }
+
     $_SESSION['phase-select-plan'] = false;
-    $jumpFrom = $_SERVER['HTTP_REFERER'];
+    $jumpFrom = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
     
 if (strpos($jumpFrom, 'index.php') !== false) {
 // ====================ここからindexでの入力が正しいか====================
@@ -104,7 +108,7 @@ if (strpos($jumpFrom, 'index.php') !== false) {
         $formError = true;
     }
 
-    if($formError || !isset($_SESSION['errors'])) {
+    if($formError) {
         header('Location: index.php');
     }
 }
@@ -178,6 +182,10 @@ if (strpos($jumpFrom, 'index.php') !== false) {
     // ----------------------------------------
     if (isset($_SESSION['errors2']) && count($_SESSION['errors2']) === 0) {
         $_SESSION['phase-select-plan'] = true;
+    }
+
+    if (isset($_SESSION['errors']) && count($_SESSION['errors']) !== 0) {
+        header('Location: index.php');
     }
 ?>
 
