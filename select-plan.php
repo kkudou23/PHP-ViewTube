@@ -2,6 +2,7 @@
 <?php
     session_start();
 
+    $_SESSION['phase-select-plan'] = false;
     $jumpFrom = $_SERVER['HTTP_REFERER'];
     
 if (strpos($jumpFrom, 'index.php') !== false) {
@@ -103,15 +104,9 @@ if (strpos($jumpFrom, 'index.php') !== false) {
         $formError = true;
     }
 
-
-    if($formError) {
+    if($formError || !isset($_SESSION['errors'])) {
         header('Location: index.php');
-    } else {
-        $_SESSION['phase-select-plan'] = true;
     }
-} elseif (strpos($jumpFrom, 'confirm.php') !== false) {
-} else {
-    header('Location: index.php');
 }
 // ----------------------------------------
 
@@ -180,6 +175,10 @@ if (strpos($jumpFrom, 'index.php') !== false) {
         $deviceNumCheck[$deviceNum] = "selected";
     // ----------------------------------------
         $coupon = isset($_SESSION['coupon']) ? $_SESSION['coupon'] : "";
+    // ----------------------------------------
+    if (isset($_SESSION['errors2']) && count($_SESSION['errors2']) === 0) {
+        $_SESSION['phase-select-plan'] = true;
+    }
 ?>
 
 <!DOCTYPE html>

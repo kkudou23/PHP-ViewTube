@@ -2,10 +2,16 @@
 <?php
     session_start();
 
+    $jumpFrom = $_SERVER['HTTP_REFERER'];
+    
+if (strpos($jumpFrom, 'select-plan.php') !== false) {
 // ====================ここからselect-planでの入力が正しいか====================
-if(!isset($_SESSION['phase-select-plan'])) {
-    header('Location: index.php');
-} else {
+    // if(!isset($_SESSION['phase-index'])) {
+    //     header('Location: index.php');
+    // } elseif(!isset($_SESSION['phase-select-plan'])) {
+    //     header('Location: select-plan.php');
+    // }
+
     $formError2 = false;
     $_SESSION['errors2'] = [];
 
@@ -62,49 +68,33 @@ if(!isset($_SESSION['phase-select-plan'])) {
         $_SESSION['coupon'] = "";
     }
 // ----------------------------------------
+}
 
-    function couponFormat($text) {
-        // 半角英数、全角英数、ハイフンが一回以上繰り返されているか
-        if(preg_match("/^[a-zA-Z0-9ａ-ｚＡ-Ｚ０-９\-－]+$/u", $text) === 1) {
-            // 全角英数を半角英数に変換
-            $text = mb_convert_kana($text, "a");
-            // 小文字を大文字に変換
-            $text = strtoupper($text);
-            // パターンにマッチするかチェック
-            if(preg_match("/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/", $text) === 1) {
-                return $text;
-            } else {
-                return false;
-            }
+function couponFormat($text) {
+    // 半角英数、全角英数、ハイフンが一回以上繰り返されているか
+    if(preg_match("/^[a-zA-Z0-9ａ-ｚＡ-Ｚ０-９\-－]+$/u", $text) === 1) {
+        // 全角英数を半角英数に変換
+        $text = mb_convert_kana($text, "a");
+        // 小文字を大文字に変換
+        $text = strtoupper($text);
+        // パターンにマッチするかチェック
+        if(preg_match("/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/", $text) === 1) {
+            return $text;
         } else {
             return false;
         }
-    }
-
-    if($formError2) {
-        header('Location: select-plan.php');
     } else {
-        $_SESSION['phase-confirm'] = true;
-    }
-
-    function h($str) {
-        return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-    };
-
-    $errors2 = [
-        "plan" => "",
-        "option" => "",
-        "deviceNum" => "",
-        "coupon" => "",
-    ];
-
-    if(isset($_SESSION['errors2'])) {
-        $errors2['plan'] = isset($_SESSION['errors2']['plan']) ? $_SESSION['errors2']['plan'] : "";
-        $errors2['option'] = isset($_SESSION['errors2']['option']) ? $_SESSION['errors2']['option'] : "";
-        $errors2['deviceNum'] = isset($_SESSION['errors2']['deviceNum']) ? $_SESSION['errors2']['deviceNum'] : "";
-        $errors2['coupon'] = isset($_SESSION['errors2']['coupon']) ? $_SESSION['errors2']['coupon'] : "";
+        return false;
     }
 }
+
+if($formError2 || !isset($_SESSION['errors2'])) {
+    header('Location: select-plan.php');
+}
+
+function h($str) {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+};
 ?>
 
 <!DOCTYPE html>
@@ -166,28 +156,24 @@ if(!isset($_SESSION['phase-select-plan'])) {
             <th>基本プラン</th>
             <td>
                 <?php echo h($_SESSION["plan"]); ?>
-                <p><?php echo $errors2['plan'] ?></p>
             </td>
         </tr>
         <tr>
             <th>オプション</th>
             <td>
                 <?php echo implode(", ", $_SESSION['option']); ?>
-                <p><?php echo $errors2['option'] ?></p>
             </td>
         </tr>
         <tr>
             <th>台数</th>
             <td>
                 <?php echo h($_SESSION["deviceNum"]); ?>
-                <p><?php echo $errors2['deviceNum'] ?></p>
             </td>
         </tr>
         <tr>
             <th>クーポンコード</th>
             <td>
                 <?php echo h($_SESSION["coupon"]); ?>
-                <p><?php echo $errors2['coupon'] ?></p>
             </td>
         </tr>
         <tr>

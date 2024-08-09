@@ -2,8 +2,7 @@
 <?php
     session_start();
 
-    $_SESSION['phase-index'] = true;
-    $_SESSION['errors2'] = [];
+    $_SESSION['phase-index'] = false;
 
     $errors = [
         "name" => "",
@@ -58,6 +57,9 @@
     };
 // ----------------------------------------
 
+if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
+    $_SESSION['phase-index'] = true;
+}
 ?>
 
 <!DOCTYPE html>
