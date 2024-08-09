@@ -1,10 +1,5 @@
-<!-- select-plan.php -->
 <?php
     session_start();
-
-    if(!isset($_SESSION['errors'])) {
-        header('Location: index.php');
-    }
 
     $_SESSION['phase-select-plan'] = false;
     $jumpFrom = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
@@ -107,10 +102,13 @@ if (strpos($jumpFrom, 'index.php') !== false) {
         $_SESSION['errors']['genre'] = "興味のあるジャンルは最低でも一つ以上選択してください";
         $formError = true;
     }
-
+// ----------------------------------------
     if($formError) {
         header('Location: index.php');
     }
+// } elseif(strpos($jumpFrom, 'confirm.php') !== false) {
+// } else {
+    // header('Location: index.php');
 }
 // ----------------------------------------
 
@@ -184,9 +182,9 @@ if (strpos($jumpFrom, 'index.php') !== false) {
         $_SESSION['phase-select-plan'] = true;
     }
 
-    if (isset($_SESSION['errors']) && count($_SESSION['errors']) !== 0) {
-        header('Location: index.php');
-    }
+    // if (isset($_SESSION['errors']) && count($_SESSION['errors']) !== 0) {
+    //     header('Location: index.php');
+    // }
 ?>
 
 <!DOCTYPE html>

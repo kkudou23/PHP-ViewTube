@@ -1,34 +1,43 @@
-<!-- confirm.php -->
 <?php
     session_start();
 
-    if(!isset($_SESSION['errors2'])) {
-        header('Location: select-plan.php');
-    }
-
-    $jumpFrom = $_SERVER['HTTP_REFERER'];
+    $_SESSION['phase-confirm'] = false;
+    $jumpFrom = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
     
 if (strpos($jumpFrom, 'select-plan.php') !== false) {
 // ====================ここからselect-planでの入力が正しいか====================
     $formError2 = false;
     $_SESSION['errors2'] = [];
+    $fee = 0;
 
 // ----------------------------------------
     $planValues = ["bronze", "silver", "gold"];
     if(isset($_POST['plan']) && in_array($_POST['plan'], $planValues, true)) {
         $_SESSION['plan'] = $_POST['plan'];
+        
+        if($_POST['plan'] === "bronze") {
+            $fee += 500;
+        } elseif($_POST['plan'] === "silver") {
+            $fee += 800;
+        } elseif($_POST['plan'] === "gold") {
+            $fee += 1000;
+        }
     } else {
         $_SESSION['errors2']['plan'] = "基本プランの値が不正です";
         $formError2 = true;
     }
 // ----------------------------------------
+    $optionValues = ["4k", "multiDevice", "parentalControl"];
     if(isset($_POST['option'])) {
-        $optionValues = ["4k", "multiDevice", "parentalControl"];
         $optionError = false;
         
         foreach($_POST['option'] as $data) {
             if(!in_array($data, $optionValues, true)) {
                 $optionError = true;
+            } else {
+                if($data === "4k") {
+                    $fee += 600;
+                }
             }
         }
 
@@ -49,15 +58,23 @@ if (strpos($jumpFrom, 'select-plan.php') !== false) {
         } else {
             $_SESSION['deviceNum'] = "1";
         }
+
+        if($_SESSION['deviceNum'] === "2") {
+            $fee += 200;
+        } elseif($_SESSION['deviceNum'] === "3") {
+            $fee += 400;
+        } elseif($_SESSION['deviceNum'] === "4") {
+            $fee += 600;
+        }
     } else {
         $_SESSION['errors2']['deviceNum'] = "デバイス数の値が不正です";
         $formError2 = true;
     }
 // ----------------------------------------
     if(!empty($_POST['coupon'])) {
-        $couponFormatResult = couponFormat($_POST['coupon']);
-        if($couponFormatResult !== false) {
-            $_SESSION['coupon'] = $couponFormatResult;
+        if(couponFormat($_POST['coupon']) !== false) {
+            $_SESSION['coupon'] = $_POST['coupon'];
+            $fee -= 100;
         } else {
             $_SESSION['errors2']['coupon'] = "クーポンの値が不正です";
             $formError2 = true;
@@ -66,28 +83,20 @@ if (strpos($jumpFrom, 'select-plan.php') !== false) {
         $_SESSION['coupon'] = "";
     }
 // ----------------------------------------
+    if($formError2) {
+        header('Location: select-plan.php');
+    }
+} else {
+    header('Location: index.php');
 }
+// ----------------------------------------
 
 function couponFormat($text) {
-    // 半角英数、全角英数、ハイフンが一回以上繰り返されているか
-    if(preg_match("/^[a-zA-Z0-9ａ-ｚＡ-Ｚ０-９\-－]+$/u", $text) === 1) {
-        // 全角英数を半角英数に変換
-        $text = mb_convert_kana($text, "a");
-        // 小文字を大文字に変換
-        $text = strtoupper($text);
-        // パターンにマッチするかチェック
-        if(preg_match("/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/", $text) === 1) {
-            return $text;
-        } else {
-            return false;
-        }
+    if(preg_match("/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/", $text) === 1) {
+        return $text;
     } else {
         return false;
     }
-}
-
-if($formError2) {
-    header('Location: select-plan.php');
 }
 
 function h($str) {
@@ -172,6 +181,12 @@ function h($str) {
             <th>クーポンコード</th>
             <td>
                 <?php echo h($_SESSION["coupon"]); ?>
+            </td>
+        </tr>
+        <tr>
+            <th><h1>料金</h1></th>
+            <td>
+                <h1><?php echo $fee ?></h1>
             </td>
         </tr>
         <tr>
