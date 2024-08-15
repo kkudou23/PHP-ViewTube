@@ -4,39 +4,51 @@
     $_SESSION['phase-select-plan'] = false;
     $jumpFrom = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
     
-    if ($_SESSION['phase-index'] === false || strpos($jumpFrom, 'index.php') !== false) {
-    // ====================ここからindexでの入力が正しいか====================
-        $formError = false;
-        $_SESSION['errors'] = [];
+    if(!isset($_SESSION['phase-index'])) {
+        header('Location: index.php');
+    }
 
-    // ----------------------------------------
+    // select-planに進んだのでセッションにerror配列があるが、要素がない(エラーがない)時
+    if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
+        $_SESSION['phase-index'] = true;
+    }
+    
+    // ▼==================== indexで入力された情報のチェック ====================▼
+    if ($_SESSION['phase-index'] === false || strpos($jumpFrom, 'index.php') !== false) { // indexで入力された情報のチェックが終了していない、またはindexからこのページに飛んできた場合
+        $formError = false; // どこかの値にエラーがあった場合trueになる変数
+        $_SESSION['errors'] = []; // セッションにerror配列を用意
+
+        // ---------- 名前チェック ----------
         if(!empty($_POST['name'])) {
             $_SESSION['name'] = $_POST['name'];
         } else {
             $_SESSION['errors']['name'] = "名前が空です";
             $formError = true;
         }
-    // ----------------------------------------
+
+        // ---------- フリガナチェック ----------
         if(!empty($_POST['furigana'])) {
-            $_SESSION['furigana'] = mb_convert_kana($_POST['furigana'], "SCKV");
+            $_SESSION['furigana'] = mb_convert_kana($_POST['furigana'], "SCKV"); // 半角スペースを全角スペースに、全角ひらがな・半角カタカナを全角カタカナに変換
         } else {
             $_SESSION['errors']['furigana'] = "フリガナが空です";
             $formError = true;
         }
-    // ----------------------------------------
-        $genderValues = ["男", "女"];
-        if(isset($_POST['gender']) && in_array($_POST['gender'], $genderValues, true)) {
+
+        // ---------- 性別チェック ----------
+        $genderValues = ["男", "女"]; // 規定の値一覧の配列
+        if(isset($_POST['gender']) && in_array($_POST['gender'], $genderValues, true)) { // 性別の値が送信されていて、かつ規定の値から選ばれている(配列の中にある)か
             $_SESSION['gender'] = $_POST['gender'];
         } else {
             $_SESSION['errors']['gender'] = "性別の値が不正です";
             $formError = true;
         }
-    // ----------------------------------------
+
+        // ---------- 生年月日チェック ----------
         if(!empty($_POST['birthday'])) {
             if(birthdayFormat($_POST['birthday'])) {
                 $birthday = new DateTime($_POST['birthday']);
                 $today = new DateTime();
-                $age = $today->diff($birthday)->y;
+                $age = $today->diff($birthday)->y; // 入力された生年月日と今日の日付を比較して年(年齢)をageに代入
                 if($age <= 12) {
                     $_SESSION['errors']['birthday'] = "12歳以下の方は登録できません";
                     $formError = true;
@@ -51,7 +63,8 @@
             $_SESSION['errors']['birthday'] = "誕生日が空です";
             $formError = true;
         }
-    // ----------------------------------------
+
+        // ---------- メールアドレスチェック ----------
         if(!empty($_POST['mail'])) {
             if(mailFormat($_POST['mail'])) {
                 $_SESSION['mail'] = $_POST['mail'];
@@ -63,7 +76,8 @@
             $_SESSION['errors']['mail'] = "メールアドレスが空です";
             $formError = true;
         }
-    // ----------------------------------------
+
+        // ---------- メールアドレス(確認)チェック ----------
         if(!empty($_POST['mailCheck'])) {
             if($_POST['mailCheck'] === $_POST['mail']) {
                 $_SESSION['mailCheck'] = $_POST['mailCheck'];
@@ -81,13 +95,14 @@
             $_SESSION['errors']['mailCheck'] = "メールアドレス(確認)が空です";
             $formError = true;
         }
-    // ----------------------------------------
+
+        // ---------- ジャンルチェック ----------
         if(isset($_POST['genre'])) {
-            $genreValues = ["洋画", "邦画", "アニメ", "ドラマ", "ドキュメンタリー", "ホラー", "バラエティ"];
+            $genreValues = ["洋画", "邦画", "アニメ", "ドラマ", "ドキュメンタリー", "ホラー", "バラエティ"]; // 規定の値一覧の配列
             $genreError = false;
             
             foreach($_POST['genre'] as $data) {
-                if(!in_array($data, $genreValues, true)) {
+                if(!in_array($data, $genreValues, true)) { // 規定の値から選ばれていない(配列の中にない)場合
                     $genreError = true;
                 }
             }
@@ -102,40 +117,16 @@
             $_SESSION['errors']['genre'] = "一つ以上選択してください";
             $formError = true;
         }
-    // ----------------------------------------
-        if($formError) {
+
+        // ----------------------------------------
+        if($formError) { // どこかの値にエラーがあった場合indexに戻る
             header('Location: index.php');
         }
-    // } elseif(strpos($jumpFrom, 'confirm.php') !== false) {
-    // } else {
-        // header('Location: index.php');
     }
-    // ----------------------------------------
+    // ▲========================================▲
 
-        function h($str) {
-            return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-        };
-
-        function birthdayFormat($date){
-            if(!preg_match('/^(19|20)[0-9]{2}\-\d{2}\-\d{2}$/', $date)){
-                return false;
-            }
-            list($y, $m, $d) = explode('-', $date);
-            if(!checkdate($m, $d, $y)){
-                return false;
-            }
-            return true;
-        }
-
-        function mailFormat($text) {
-            if(preg_match("/^[A-Za-z0-9.\-_+@]+$/", $text) === 1) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-    // ====================ここからプラン関係====================
+    // ▼==================== select-planで表示する情報・エラーの処理 ====================▼
+        // confirmから帰ってきたエラーを格納する配列を用意
         $errors2 = [
             "plan" => "",
             "option" => "",
@@ -144,47 +135,69 @@
         ];
 
         if(isset($_SESSION['errors2'])) {
+            // セッションに入っているエラーを配列にコピー
             $errors2['plan'] = isset($_SESSION['errors2']['plan']) ? $_SESSION['errors2']['plan'] : "";
             $errors2['option'] = isset($_SESSION['errors2']['option']) ? $_SESSION['errors2']['option'] : "";
             $errors2['deviceNum'] = isset($_SESSION['errors2']['deviceNum']) ? $_SESSION['errors2']['deviceNum'] : "";
             $errors2['coupon'] = isset($_SESSION['errors2']['coupon']) ? $_SESSION['errors2']['coupon'] : "";
         }
-    // ----------------------------------------
-        $plan = isset($_SESSION['plan']) ? $_SESSION['plan'] : "ブロンズ";
-        $planCheck = [
-            "ブロンズ" => "",
-            "シルバー" => "",
-            "ゴールド" => "",
-        ];
-        $planCheck[$plan] = "checked";
-    // ----------------------------------------
-        $option = isset($_SESSION['option']) ? $_SESSION['option'] : [];
-        $optionCheck = [
-            "4K画質対応" => "",
-            "複数デバイス視聴" => "",
-            "ペアレンタルコントロール" => "",
-        ];
-        foreach($option as $data) {
-            $optionCheck[$data] = "checked";
-        };
-    // ----------------------------------------
-        $deviceNum = isset($_SESSION['deviceNum']) ? $_SESSION['deviceNum'] : "";
-        $deviceNumCheck = [
-            "2" => "",
-            "3" => "",
-            "4" => "",
-        ];
-        $deviceNumCheck[$deviceNum] = "selected";
-    // ----------------------------------------
-        $coupon = isset($_SESSION['coupon']) ? $_SESSION['coupon'] : "";
-    // ----------------------------------------
-    if (isset($_SESSION['errors2']) && count($_SESSION['errors2']) === 0) {
-        $_SESSION['phase-select-plan'] = true;
-    }
 
-    // if (isset($_SESSION['errors']) && count($_SESSION['errors']) !== 0) {
-    //     header('Location: index.php');
-    // }
+        // ▼---------- セッションに入っているデータを変数にコピー ----------▼
+            $plan = isset($_SESSION['plan']) ? $_SESSION['plan'] : "ブロンズ";
+            $planCheck = [
+                "ブロンズ" => "",
+                "シルバー" => "",
+                "ゴールド" => "",
+            ];
+            $planCheck[$plan] = "checked";
+            
+            $option = isset($_SESSION['option']) ? $_SESSION['option'] : [];
+            $optionCheck = [
+                "4K画質対応" => "",
+                "複数デバイス視聴" => "",
+                "ペアレンタルコントロール" => "",
+            ];
+            foreach($option as $data) {
+                $optionCheck[$data] = "checked";
+            };
+            
+            $deviceNum = isset($_SESSION['deviceNum']) ? $_SESSION['deviceNum'] : "";
+            $deviceNumCheck = [
+                "2" => "",
+                "3" => "",
+                "4" => "",
+            ];
+            $deviceNumCheck[$deviceNum] = "selected";
+            
+            $coupon = isset($_SESSION['coupon']) ? $_SESSION['coupon'] : "";
+        // ▲----------------------------------------▲
+
+        // confirmに進んだのでセッションにerror2配列があるが、要素がない(エラーがない)時
+            if (isset($_SESSION['errors2']) && count($_SESSION['errors2']) === 0) {
+            $_SESSION['phase-select-plan'] = true;
+        }
+    // ▲========================================▲
+
+    // ▼==================== indexで入力された情報のチェックに使う関数 ====================▼
+    function birthdayFormat($date){
+        if(!preg_match('/^(19|20)\d{2}\-\d{2}\-\d{2}$/', $date)){ // 「数字4桁(19XXか20XX)-数字2桁-数字2桁」の形式になってるか
+            return false;
+        }
+        list($y, $m, $d) = explode('-', $date); // ハイフンで年月日に分割
+        if(!checkdate($m, $d, $y)){ // 存在する日付かチェック
+            return false;
+        }
+        return true;
+    }
+    
+    function mailFormat($text) {
+        if(preg_match("/^[A-Za-z0-9.\-_+@]+$/", $text) === 1) { // 半角英数(と一部の記号)のみで構成されているか
+            return true;
+        } else {
+            return false;
+        }
+    }
+    // ▲========================================▲
 ?>
 
 <!DOCTYPE html>
@@ -195,7 +208,6 @@
     <title>プラン・オプション選択画面</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
@@ -205,20 +217,20 @@
     <main>
         <h3>ステップ 2/3</h3>
         <h1>プラン・オプションを選択</h1>
-
+        
         <form action="confirm.php" method="POST">
             <div class="input-item">
                 <p class="input-label">基本プランの選択</p>
-                <div class="radio-group-plan">
-                    <div class="radio-option-plan">
+                <div class="plan-radio-group">
+                    <div class="plan-radio-option">
                         <input type="radio" name="plan" id="bronze" value="ブロンズ" <?php echo $planCheck['ブロンズ']; ?>>
                         <label for="bronze" id="label-bronze">ブロンズ<br><span class="plan-about">(基本プラン 500円/月)</span></label>
                     </div>
-                    <div class="radio-option-plan">
+                    <div class="plan-radio-option">
                         <input type="radio" name="plan" id="silver" value="シルバー" <?php echo $planCheck['シルバー']; ?>>
                         <label for="silver" id="label-silver">シルバー<br><span class="plan-about">(基本に加えさらに高画質 800円/月)</span></label>
                     </div>
-                    <div class="radio-option-plan">
+                    <div class="plan-radio-option">
                         <input type="radio" name="plan" id="gold" value="ゴールド" <?php echo $planCheck['ゴールド']; ?>>
                         <label for="gold" id="label-gold">ゴールド<br><span class="plan-about">(高画質でさらに最新作をお届け 1000円/月)</span></label>
                     </div>
@@ -228,13 +240,13 @@
 
             <div class="input-item">
                 <p class="input-label">オプションの選択</p>
-                <div class="checkbox-group-option">
-                    <div class="checkbox-option-option">
+                <div class="option-checkbox-group">
+                    <div class="option-checkbox-option">
                         <label>
                             <input type="checkbox" name="option[]" value="4K画質対応" <?php echo $optionCheck["4K画質対応"]; ?>>4K画質対応<span class="note">(+600円)</span>
                         </label>
                     </div>
-                    <div class="checkbox-option-option">
+                    <div class="option-checkbox-option">
                         <label>
                             <input type="checkbox" name="option[]" value="複数デバイス視聴" <?php echo $optionCheck["複数デバイス視聴"]; ?> id="multiDevice">複数デバイス視聴<span class="note">(一台追加につき+200円)</span>
                             <select name="deviceNum" id="deviceNum">
@@ -245,7 +257,7 @@
                         </label>
                         <p><?php echo $errors2['deviceNum'] ?></p>
                     </div>
-                    <div class="checkbox-option-option">
+                    <div class="option-checkbox-option">
                         <label>
                             <input type="checkbox" name="option[]" value="ペアレンタルコントロール" <?php echo $optionCheck["ペアレンタルコントロール"]; ?>>ペアレンタルコントロール<span class="note">(無料)</span>
                         </label>
@@ -274,11 +286,13 @@
             </div>
         </form>
     </main>
+
     <footer>
         <p>2024 - PHP夏季課題</p>
     </footer>
     
     <script>
+        // 「複数デバイス視聴」のオプションが選択されているときのみデバイス数を選択するプルダウンメニューを表示する
         const multiDevice = document.getElementById('multiDevice');
         const deviceNum = document.getElementById('deviceNum');
 

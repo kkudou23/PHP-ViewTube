@@ -1,460 +1,405 @@
 @charset "utf-8";
 
-*,  *::before, *::after {
-    box-sizing: border-box;
-}
-
-html, body, main, div, span, h1, h2, h3, p, ol, ul, li {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background-image: url("background.jpg");
-    background-size:cover;
-    height: 100vh;
-}
-
-/* ============================================================ */
-
-#service-name {
-    /* 画面左上の「ViewTube Premium」 */
-    margin: 0 50px;
-    font-size: 40px;
-    line-height: 90px;
-    height: 90px;
-
-    color: red;
-    font-family: "Oswald", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 700;
-    font-style: normal;
-}
-
-a {
-    /* 一時的にリンクの下線を削除 */
-    text-decoration: none;
-    color: red;
-}
-
-/* ============================================================ */
-
-main {
-    /* 半透明の黒背景の部分 */
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    font-family: "Noto Sans JP", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-
-    padding: 50px;
-    width: 750px;
-    margin: 0 auto;
-    border-radius: 5px;
-} @media screen and (max-width:750px) {
-    main {
-        width: 100%;
-    }
-}
-
-table {
-    color: white;
-}
-
-/* ============================================================ */
-
-.input-item {
-    /* それぞれの項目名と入力欄を囲むdiv要素 */
-    margin: 25px 0;
-}
-
-.input-label {
-    /* 入力項目名 */
-    font-size: 18px;
-}
-
-.note {
-    /* 入力項目の補足 */
-    font-size: 14px;
-}
-
-.required {
-    /* 必須マーク */
-    background-color: red;
-    border-radius: 3px;
-    padding: 0px 5px;
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-.error-message {
-    /* 入力した情報の形式が間違ってたりしたらのエラーメッセージ */
-    color: red;
-    font-size: 14px;
-}
-
-input[type="text"], input[type="date"] {
-    /* テキストボックスと日付 */
-    background-color: rgba(0, 0, 0, 0);
-    border: 0.1px solid dimgray;
-    border-radius: 3px;
-    padding: 10px;
-    width: 100%;
-    margin-top: 3px;
-    color: white;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-    /* 日付のカレンダーアイコン */
-    filter: invert(100%);
-    transform: scale(1.5);
-}
-
-/* =============================ラジオボタン(性別)=============================== */
-
-.radio-group-gender {
-    /* 性別選択部分のdiv */
-    display: flex;
-    padding: 10px 0;
-    width: 100%;
-}
-
-.radio-option-gender input[type=radio] {
-    /* ラジオボタンの非表示 */
-    opacity: 0;
-    position: absolute;
-}
-
-.radio-option-gender {
-    /* 「男」「女」 */
-    width: 50%;
-}
-
-.radio-option-gender label {
-    /* 「男」「女」 */
-    cursor: pointer;
-    padding: 7px 0;
-    display: inline-block;
-    width: 100%;
-    color: white;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0);
-    border: 0.1px solid dimgray;
-}
-
-.radio-option-gender:first-child label {
-    /* 「男」の角丸 */
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-}
-.radio-option-gender:last-child label {
-    /* 「女」の角丸 */
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-}
-
-.radio-option-gender input[type=radio]:checked+label {
-    /* 選択されてるオプションの色 */
-    background-color: dimgray;
-    color: white;
-}
-
-/* ==============================チェックボックス(ジャンル)============================== */
-.checkbox-group-genre {
-    /* ジャンル選択部分のdiv */
-    display: flex;
-    padding-top: 10px;
-    width: 100%;
-    flex-wrap: wrap;
-}
-
-.checkbox-option-genre {
-    /* 「洋画」「邦画」等 */
-    width: calc(50% - 5px);
-}
-
-.checkbox-option-genre label {
-    /* 「洋画」「邦画」等 */
-    cursor: pointer;
-    padding: 7px 0;
-    display: inline-block;
-    width: 100%;
-    color: white;
-    background-color: rgba(0, 0, 0, 0);
-    border: 0.1px solid dimgray;
-    border-radius: 3px;
-    margin-bottom: 10px;
-    padding-left: 10px;
-}
-
-.checkbox-option-genre:nth-child(even) label {
-    margin-left: 10px;
-}
-
-.checkbox-option-genre:last-child label {
-    margin-bottom: 0;
-}
-
-.checkbox-option-genre label:has(input[type="checkbox"]:checked) {
-    /* 選択されてるオプションの色 */
-    background-color: dimgray;
-    color: white;
-}
-
-
-/* ============================================================ */
-
-footer {
-    background-color: black;
-    text-align: center;
-    margin-top: 50px;
-    width: 100%;
-    height: 100px;
-    line-height: 100px;
-}
-
-footer p {
-    color: dimgray;
-}
-
-.button {
-    border: 0;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 10px;
-    width: 50%;
-    display: block;
-    margin: 15px auto 0 auto;
-    text-align: center;
-    background-color: red;
-    color: white;
-}
-
-.gray-button {
-    background-color: dimgray;
-    color: white;
-    line-height: 1.2;
-}
-
-.button-container {
-    margin-top: 40px;
-}
-
-/* =============================ラジオボタン(プラン)=============================== */
-.radio-group-plan {
-    /* 性別選択部分のdiv */
-    padding: 10px 0;
-    width: 100%;
-}
-
-.radio-option-plan input[type=radio] {
-    /* ラジオボタンの非表示 */
-    /* opacity: 0; */
-    position: absolute;
-    transform: scale(1.5);
-    margin: 30px;
-    accent-color: black;
-}
-
-.radio-option-plan label {
-    cursor: pointer;
-    padding: 20px 65px;
-    display: inline-block;
-    width: 100%;
-    color: white;
-    border: 0.1px solid dimgray;
-    border-radius: 3px;
-    color: white;
-    font-size: 25px;
-    margin-bottom: 10px;
-    line-height: 1.2;
-}
-
-.radio-option-plan input[type=radio]:checked+label {
-    font-weight: bold;
-    outline: 3px solid white;
-}
-
-.radio-option-plan:last-child label {
-    margin: 0;
-}
-
-#label-bronze {
-    background-image: linear-gradient(120deg, #F7A95B, #975c21);
-}
-
-#label-silver {
-    background-image: linear-gradient(120deg, #C3C4C9, #4f5154);
-}
-
-#label-gold {
-    background-image: linear-gradient(120deg, #F3C95A, #cf9400);
-}
-
-.plan-about {
-    font-size: 16px;
-}
-
-/* ==============================チェックボックス(オプション)============================== */
-.checkbox-group-option {
-    /* ジャンル選択部分のdiv */
-    display: flex;
-    padding: 10px 0;
-    width: 100%;
-    flex-wrap: wrap;
-}
-
-input[type="checkbox"] {
-    transform: scale(1.2);
-    margin-right: 10px;
-    accent-color: white;
-}
-
-.checkbox-option-option {
-    width: 100%;
-}
-
-.checkbox-option-option label {
-    cursor: pointer;
-    padding: 7px 0;
-    display: inline-block;
-    width: 100%;
-    color: white;
-    border: 0.1px solid dimgray;
-    border-radius: 3px;
-    margin-bottom: 10px;
-    padding-left: 10px;
-}
-
-.checkbox-option-option label:has(input[type="checkbox"]:checked) {
-    /* 選択されてるオプションの色 */
-    background-color: dimgray;
-    color: white;
-}
-
-select {
-    width: calc(100% - 60px);
-    margin-left: 30px;
-    margin-top: 5px;
-    height: 30px;
-    font-size: 16px;
-    padding: 5px;
-}
-
 pre {
     color: white;
 }
+/* ▼==================== 共通部分 ====================▼ */
+    :root {
+        --header-height: 90px;
+        --footer-height: 100px;
+    }
 
-table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin: 25px 0;
-}
+    *,  *::before, *::after {
+        box-sizing: border-box;
+    }
 
-tr {
-    border-top: 1px solid dimgray;
-}
+    html, body, main, div, span, h1, h2, h3, p, ol, ul, li {
+        margin: 0;
+        padding: 0;
+    }
 
-tr:last-child {
-    border-bottom: 1px solid dimgray;
-}
+    body {
+        height: 100vh;
+        background-image: url("background.jpg");
+        background-size:cover;
+    }
 
-th, td {
-    padding: 10px;
-}
+    #service-name { /* 画面左上の「ViewTube Premium」 */
+        height: var(--header-height);
+        margin: 0 50px;
+        
+        color: red;
+        font-family: "Oswald", sans-serif;
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 90px; /* 文字を縦方向の中央に */
+    }
 
-th {
-    color: dimgray;
-    font-weight: normal;
-    padding-left: 30px;
-}
+    main {
+        margin: 0 auto;
+        padding: 50px;
+        width: 750px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 5px;
+        
+        color: white;
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+    } @media screen and (max-width:750px) {
+        main {
+            width: 100%;
+        }
+    }
 
-.show-price {
-    text-align: right;
-    padding-right: 30px;
-}
+    .button {
+        display: block;
+        cursor: pointer;
+        margin: 15px auto 0 auto;
+        padding: 10px;
+        width: 50%;
+        border: 0;
+        border-radius: 3px;
+        background-color: red;
+        color: white;
+        text-align: center;
+        font-size: 18px;
+        text-decoration: none;
+    }
+    
+    .gray-button {
+        background-color: dimgray;
+        line-height: 1.2;
+    }
+    
+    .button-container { /* ボタンが2つ縦に並ぶ時のdiv */
+        margin-top: 40px;
+    }
 
-.monthly-fee {
-    text-align: right;
-    margin-right: 20px;
-}
-
-.monthly-fee span {
-    font-size: 16px;
-    margin: 0 10px;
-}
-
-.plan-table {
-    margin-bottom: 0;
-    margin-top: 40px;
-}
-
-#complete {
-    height: 100vh;
-}
-
-#complete main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - 240px);
-    background-color: rgba(0, 0, 0, 0);
-    padding: 0;
-    width: 100%;
-    margin: 0;
-
-    position: relative;/*描画を#particles-jsよりも上にするためposition:relative;を指定*/
-	z-index: 1;/*z-indexの数字を大きくすることで描画を#particles-jsよりも上に*/
-}
-
-#complete main div {
-    /* 半透明の黒背景の部分 */
-    background-color: rgba(0, 0, 0, 0.7);
-    text-align: center;
-    padding: 150px 50px;
-    width: 750px;
-    margin: 0 auto;
-    border-radius: 5px;
-} @media screen and (max-width:750px) {
-    #complete main div {
+    footer {
+        margin-top: 50px;
+        height: var(--footer-height);
         width: 100%;
+        background-color: black;
     }
-}
-
-#complete main h1 {
-    font-family: "Noto Sans JP", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 900;
-    font-style: normal;
-    font-size: 40px;
-
-    background: linear-gradient(140deg, red,orange,yellow,green,aqua,blue,purple);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    animation: fancyDisplay 4s linear infinite;
-}
-
-@keyframes fancyDisplay{
-    0% {
-        transform: rotateY(0deg) scale(1);
+    
+    footer p {
+        color: dimgray;
+        text-align: center;
+        line-height: 100px; /* 文字を縦方向の中央に */
     }
-    50% {
-        transform: rotateY(180deg) scale(0.5);
-    }
-    100% {
-        transform: rotateY(360deg) scale(1);
-    }
-}
+/* ▲========================================▲ */
 
-#particles-js{ 
-	position: fixed;
-	z-index :-1;
-	width: 100%;
-	height: 100%;
-}
+/* ▼==================== フォームの入力項目に関するパーツ ====================▼ */
+    .input-item { /* それぞれの項目名と入力欄を囲むdiv要素 */
+        margin: 25px 0;
+    }
+
+    .input-label { /* 入力項目名 */
+        font-size: 18px;
+    }
+
+    .note { /* 入力項目の補足 */
+        font-size: 14px;
+    }
+
+    .error-message { /* 入力した情報の形式が間違ってたり空欄だった場合のエラーメッセージ */
+        color: red;
+        font-size: 14px;
+    }
+
+    input[type="text"], input[type="date"] {
+        margin-top: 3px;
+        padding: 10px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0);
+        border: 0.1px solid dimgray;
+        border-radius: 3px;
+        color: white;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.2);
+        margin-right: 10px;
+        accent-color: white; /* 選択されているチェックボックスの背景色を青から白に */
+    }
+
+    /* ▼-------------------- ジャンル選択とオプション選択での共通セレクタ --------------------▼ */
+        .genre-checkbox-group, .option-checkbox-group { /* ジャンル選択部分のdiv、オプション選択部分のdiv */
+            display: flex;
+            flex-wrap: wrap;
+            padding-top: 10px;
+            width: 100%;
+        }
+
+        .genre-checkbox-option label, .option-checkbox-option label { /* ジャンルの選択肢のラベル、オプションの選択肢のラベル */
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 7px 0 7px 10px;
+            width: 100%;
+            border: 0.1px solid dimgray;
+            border-radius: 3px;
+            color: white;
+        }
+
+        .genre-checkbox-option label:has(input[type="checkbox"]:checked), 
+        .option-checkbox-option label:has(input[type="checkbox"]:checked) { /* 選択されたチェックボックスのラベル(性別の時とはタグの構成が違うのでセレクタの書き方も違う) */
+            background-color: dimgray;
+            color: white;
+        }
+    /* ▲----------------------------------------▲ */
+/* ▲========================================▲ */
+
+/* ▼==================== index(個人情報入力画面)でのみ使用 ====================▼ */
+    .required { /* 必須マーク */
+        margin-left: 10px;
+        padding: 0px 5px;
+        background-color: red;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator { /* 日付のカレンダーアイコン */
+        filter: invert(100%); /* 階調を反転させて白色に */
+        transform: scale(1.5);
+    }
+
+    /* ▼-------------------- 性別選択部分 --------------------▼ */
+        .gender-radio-group { /* 性別選択部分のdiv */
+            display: flex;
+            padding-top: 10px;
+            width: 100%;
+        }
+
+        .gender-radio-option { /* (ラジオボタンとlabelを包んでいる)性別の選択肢 */
+            width: 50%;
+        }
+
+        .gender-radio-option input[type=radio] {
+            opacity: 0; /* 本来のラジオボタンを非表示に */
+            position: absolute; /* デザインが崩れないよう位置を調整 */
+        }
+
+        .gender-radio-option label { /* 性別の選択肢のラベル */
+            cursor: pointer;
+            display: inline-block;
+            padding: 7px 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0);
+            border: 0.1px solid dimgray;
+            color: white;
+            text-align: center;
+        }
+        
+        .gender-radio-option:first-child label { /* 最初の性別の選択肢(「男」)のラベル */
+            /* 左上と左下の角を丸くする */
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+        .gender-radio-option:last-child label { /* 最後の性別の選択肢(「女」)のラベル */
+            /* 右上と右下の角を丸くする */
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+        
+        .gender-radio-option input[type=radio]:checked+label { /* 選択されたラジオボタンのラベル */
+            background-color: dimgray;
+            color: white;
+        }
+    /* ▲----------------------------------------▲ */
+
+    /* ▼-------------------- ジャンル選択部分 --------------------▼ */
+        .genre-checkbox-option { /* (チェックボックスとlabelを包んでいる)ジャンルの選択肢 */
+            width: calc(50% - 5px);
+        }
+        
+        .genre-checkbox-option:nth-child(even) label { /* 偶数個目(右側)のジャンルの選択肢のラベル */
+            margin-left: 10px;
+        }
+        
+        .genre-checkbox-option:last-child label { /* 最後のジャンルの選択肢(「バラエティ」)のラベル */
+            margin-bottom: 0;
+        }
+    /* ▲----------------------------------------▲ */
+/* ▲========================================▲ */
+
+/* ▼==================== select-plan(プラン・オプション選択画面)でのみ使用 ====================▼ */
+    /* ▼-------------------- プラン選択部分 --------------------▼ */
+        .plan-radio-group { /* プラン選択部分のdiv */
+            padding-top: 10px;
+            width: 100%;
+        }
+
+        .plan-radio-option input[type=radio] {
+            position: absolute;
+            transform: scale(1.5);
+            margin: 30px;
+            accent-color: black; /* 選択されているラジオボタンの色を青から黒に */
+        }
+        
+        .plan-radio-option label { /* プランの選択肢のラベル */
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 20px 65px;
+            width: 100%;
+            border-radius: 3px;
+            color: white;
+            font-size: 25px;
+            line-height: 1.2;
+        }
+        
+        .plan-radio-option input[type=radio]:checked+label { /* 選択されたラジオボタンのラベル */
+            font-weight: bold;
+            outline: 3px solid white;
+        }
+        
+        .plan-radio-option:last-child label { /* 最後のプランの選択肢(「ゴールド」)のラベル */
+            margin: 0;
+        }
+        
+        #label-bronze { /* 「ブロンズ」のラベル */
+            background-image: linear-gradient(120deg, #F7A95B, #975c21);
+        }
+        
+        #label-silver { /* 「シルバー」のラベル */
+            background-image: linear-gradient(120deg, #C3C4C9, #4f5154);
+        }
+        
+        #label-gold { /* 「ゴールド」のラベル */
+            background-image: linear-gradient(120deg, #F3C95A, #cf9400);
+        }
+        
+        .plan-about {
+            font-size: 16px;
+        }
+    /* ▲----------------------------------------▲ */
+    
+    /* ▼-------------------- オプション選択部分 --------------------▼ */
+        .option-checkbox-option { /* (チェックボックスとlabelを包んでいる)オプションの選択肢 */
+            width: 100%;
+        }
+        
+        .option-checkbox-option select {
+            margin-top: 5px;
+            margin-left: 30px;
+            padding: 5px;
+            height: 30px;
+            width: calc(100% - 60px);
+            font-size: 16px;
+        }
+    /* ▲----------------------------------------▲ */
+/* ▲========================================▲ */
+
+/* ▼==================== confirm(確認画面)でのみ使用 ====================▼ */
+    table {
+        margin: 25px 0;
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    tr {
+        border-top: 1px solid dimgray;
+    }
+
+    tr:last-child {
+        border-bottom: 1px solid dimgray;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    th {
+        color: dimgray;
+        font-weight: normal;
+        padding-left: 30px;
+    }
+
+    .plan-table { /* プラン・オプションを表示するテーブル */
+        margin-top: 40px;
+        margin-bottom: 0;
+    }
+
+    .show-price { /* 金額を表示する列 */
+        text-align: right;
+        padding-right: 30px;
+    }
+
+    .monthly-fee { /* 月額利用料 */
+        text-align: right;
+        margin-right: 20px;
+    }
+
+    .monthly-fee span { /* 「月額利用料」「円」 */
+        font-size: 16px;
+        margin: 0 10px;
+    }
+/* ▲========================================▲ */
+
+/* ▼==================== registration-complete(登録完了画面)でのみ使用 ====================▼ */
+    #complete-page main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        height: calc(100% - var(--header-height) - var(--footer-height) - 50px); /* 最後の50pxはフッターの上マージン分 */
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0);
+
+        position: relative; /* 紙吹雪のレイヤーより上に配置 */
+        z-index: 1;
+    }
+
+    #complete-page main div {
+        margin: 0 auto;
+        padding: 150px 50px;
+        width: 750px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 5px;
+        text-align: center;
+    } @media screen and (max-width:750px) {
+        #complete-page main div {
+            width: 100%;
+        }
+    }
+
+    #complete-page main h1 {
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 40px;
+        font-weight: 900;
+
+        background: linear-gradient(140deg, red,orange,yellow,green,aqua,blue,purple);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        animation: fancyDisplay 4s linear infinite;
+    }
+
+    @keyframes fancyDisplay{
+        0% {
+            transform: rotateY(0deg) scale(1);
+        }
+        50% {
+            transform: rotateY(180deg) scale(0.5);
+        }
+        100% {
+            transform: rotateY(360deg) scale(1);
+        }
+    }
+
+    #complete-page main h1 span {
+        display: inline-block;
+    }
+
+    #confetti { /* 紙吹雪のレイヤー */
+        position: fixed;
+        z-index :-1;
+        width: 100%;
+        height: 100%;
+    }
+/* ▲========================================▲ */
