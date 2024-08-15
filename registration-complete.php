@@ -30,9 +30,7 @@
 </head>
 <body id="complete">
     <div id="particles-js"></div>
-    <h1 id="service-name">
-        <a href="registration-complete.php">ViewTube Premium</a>
-    </h1>
+    <h1 id="service-name">ViewTube Premium</h1>
 
     <main>
         <div>

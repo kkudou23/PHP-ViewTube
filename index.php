@@ -23,42 +23,42 @@
         $errors['genre'] = isset($_SESSION['errors']['genre']) ? $_SESSION['errors']['genre'] : "";
     }
 
-// ----------------------------------------
-    $name = isset($_SESSION['name']) ? $_SESSION['name'] : "";
-// ----------------------------------------
-    $furigana = isset($_SESSION['furigana']) ? $_SESSION['furigana'] : "";
-// ----------------------------------------
-    $gender = isset($_SESSION['gender']) ? $_SESSION['gender'] : "男";
-    $genderCheck = [
-        "男" => "",
-        "女" => "",
-    ];
-    $genderCheck[$gender] = "checked";
-// ----------------------------------------
-    $birthday = isset($_SESSION['birthday']) ? $_SESSION['birthday'] : "";
-// ----------------------------------------
-    $mail = isset($_SESSION['mail']) ? $_SESSION['mail'] : "";
-// ----------------------------------------
-    $mailCheck = isset($_SESSION['mailCheck']) ? $_SESSION['mailCheck'] : "";
-// ----------------------------------------
-    $genre = isset($_SESSION['genre']) ? $_SESSION['genre'] : [];
-    $genreCheck = [
-        "洋画" => "",
-        "邦画" => "",
-        "アニメ" => "",
-        "ドラマ" => "",
-        "ドキュメンタリー" => "",
-        "ホラー" => "",
-        "バラエティ" => "",
-    ];
-    foreach($genre as $data) {
-        $genreCheck[$data] = "checked";
-    };
-// ----------------------------------------
+    // ----------------------------------------
+        $name = isset($_SESSION['name']) ? $_SESSION['name'] : "";
+    // ----------------------------------------
+        $furigana = isset($_SESSION['furigana']) ? $_SESSION['furigana'] : "";
+    // ----------------------------------------
+        $gender = isset($_SESSION['gender']) ? $_SESSION['gender'] : "男";
+        $genderCheck = [
+            "男" => "",
+            "女" => "",
+        ];
+        $genderCheck[$gender] = "checked";
+    // ----------------------------------------
+        $birthday = isset($_SESSION['birthday']) ? $_SESSION['birthday'] : "";
+    // ----------------------------------------
+        $mail = isset($_SESSION['mail']) ? $_SESSION['mail'] : "";
+    // ----------------------------------------
+        $mailCheck = isset($_SESSION['mailCheck']) ? $_SESSION['mailCheck'] : "";
+    // ----------------------------------------
+        $genre = isset($_SESSION['genre']) ? $_SESSION['genre'] : [];
+        $genreCheck = [
+            "洋画" => "",
+            "邦画" => "",
+            "アニメ" => "",
+            "ドラマ" => "",
+            "ドキュメンタリー" => "",
+            "ホラー" => "",
+            "バラエティ" => "",
+        ];
+        foreach($genre as $data) {
+            $genreCheck[$data] = "checked";
+        };
+    // ----------------------------------------
 
-if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
-    $_SESSION['phase-index'] = true;
-}
+    if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
+        $_SESSION['phase-index'] = true;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -74,19 +74,7 @@ if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1 id="service-name">
-        <a href="registration-complete.php">ViewTube Premium</a>
-    </h1>
-
-    <?php
-        // echo "<pre><h1>セッション</h1>";
-        // var_dump($_SESSION);    
-        // echo "</pre>";
-
-        // echo "<pre><h1>ポスト</h1>";
-        // var_dump($_POST);    
-        // echo "</pre>";
-    ?>
+    <h1 id="service-name">ViewTube Premium</h1>
     
     <main>
         <h3>ステップ 1/3</h3>
@@ -96,8 +84,8 @@ if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
             <div class="input-item">
                 <label>
                     <p class="input-label">氏名<span class="required">必須</span></p>
-                    <input type="text" name="name" value="<?php echo $name; ?>" placeholder="例 : 山田太郎" required>
                     <p class="error-message"><?php echo $errors['name'] ?></p>
+                    <input type="text" name="name" value="<?php echo $name; ?>" placeholder="例 : 山田太郎" required>
                 </label>
             </div>
             
@@ -105,13 +93,14 @@ if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
             <div class="input-item">
                 <label>
                     <p class="input-label">フリガナ<span class="required">必須</span></p>
-                    <input type="text" name="furigana" value="<?php echo $furigana; ?>" placeholder="例 : ヤマダタロウ" required>
                     <p class="error-message"><?php echo $errors['furigana'] ?></p>
+                    <input type="text" name="furigana" value="<?php echo $furigana; ?>" placeholder="例 : ヤマダタロウ" required>
                 </label>
             </div>
 
             <div class="input-item">
                 <p class="input-label">性別</p>
+                <p class="error-message"><?php echo $errors['gender'] ?></p>
                 <div class="radio-group-gender">
                     <div class="radio-option-gender">
                         <input type="radio" name="gender" id="male" value="男" <?php echo $genderCheck['男']; ?>>
@@ -122,35 +111,35 @@ if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
                         <label for="female">女</label>
                     </div>
                 </div>
-                <p class="error-message"><?php echo $errors['gender'] ?></p>
             </div>
 
             <div class="input-item">
                 <label>
                     <p class="input-label">生年月日<span class="required">必須</span></p>
-                    <input type="date" name="birthday" value="<?php echo $birthday; ?>" required>
                     <p class="error-message"><?php echo $errors['birthday'] ?></p>
+                    <input type="date" name="birthday" value="<?php echo $birthday; ?>" required>
                 </label>
             </div>
 
             <div class="input-item">
                 <label>
                     <p class="input-label">メールアドレス<span class="required">必須</span></p>
-                    <input type="text" name="mail" value="<?php echo $mail; ?>" placeholder="例 : YamadaTaro@sample.com" required>
                     <p class="error-message"><?php echo $errors['mail'] ?></p>
+                    <input type="text" name="mail" value="<?php echo $mail; ?>" placeholder="例 : YamadaTaro@sample.com" required>
                 </label>
             </div>
 
             <div class="input-item">
                 <label>
                     <p class="input-label">メールアドレス(確認)<span class="required">必須</span></p>
-                    <input type="text" name="mailCheck" value="<?php echo $mailCheck; ?>" placeholder="メールアドレスを再度入力してください" required>
                     <p class="error-message"><?php echo $errors['mailCheck'] ?></p>
+                    <input type="text" name="mailCheck" value="<?php echo $mailCheck; ?>" placeholder="メールアドレスを再度入力してください" required>
                 </label>
             </div>
 
             <div class="input-item">
                 <p class="input-label">興味のあるジャンル<span class="note">(一つ以上選択してください)</span></p>
+                <p class="error-message"><?php echo $errors['genre'] ?></p>
                 <div class="checkbox-group-genre">
                     <div class="checkbox-option-genre">
                         <label>
@@ -188,7 +177,6 @@ if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
                         </label>
                     </div>
                 </div>
-                <p class="error-message"><?php echo $errors['genre'] ?></p>
             </div>
             <input type="submit" value="プランの選択" class="button">
         </form>

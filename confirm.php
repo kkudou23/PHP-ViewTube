@@ -4,104 +4,108 @@
     $_SESSION['phase-confirm'] = false;
     $jumpFrom = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
     
-if (strpos($jumpFrom, 'select-plan.php') !== false) {
-// ====================ここからselect-planでの入力が正しいか====================
-    $formError2 = false;
-    $_SESSION['errors2'] = [];
-    $fee = 0;
+    if (strpos($jumpFrom, 'select-plan.php') !== false) {
+    // ====================ここからselect-planでの入力が正しいか====================
+        $formError2 = false;
+        $_SESSION['errors2'] = [];
+        $fee = 0;
+        $planFee = 0;
 
-// ----------------------------------------
-    $planValues = ["ブロンズ", "シルバー", "ゴールド"];
-    if(isset($_POST['plan']) && in_array($_POST['plan'], $planValues, true)) {
-        $_SESSION['plan'] = $_POST['plan'];
-        
-        if($_POST['plan'] === "ブロンズ") {
-            $fee += 500;
-        } elseif($_POST['plan'] === "シルバー") {
-            $fee += 800;
-        } elseif($_POST['plan'] === "ゴールド") {
-            $fee += 1000;
+    // ----------------------------------------
+        $planValues = ["ブロンズ", "シルバー", "ゴールド"];
+        if(isset($_POST['plan']) && in_array($_POST['plan'], $planValues, true)) {
+            $_SESSION['plan'] = $_POST['plan'];
+            
+            if($_POST['plan'] === "ブロンズ") {
+                $fee += 500;
+                $planFee = 500;
+            } elseif($_POST['plan'] === "シルバー") {
+                $fee += 800;
+                $planFee = 800;
+            } elseif($_POST['plan'] === "ゴールド") {
+                $fee += 1000;
+                $planFee = 1000;
+            }
+        } else {
+            $_SESSION['errors2']['plan'] = "基本プランの値が不正です";
+            $formError2 = true;
         }
-    } else {
-        $_SESSION['errors2']['plan'] = "基本プランの値が不正です";
-        $formError2 = true;
-    }
-// ----------------------------------------
-    $optionValues = ["4K画質対応", "複数デバイス視聴", "ペアレンタルコントロール"];
-    if(isset($_POST['option'])) {
-        $optionError = false;
-        
-        foreach($_POST['option'] as $data) {
-            if(!in_array($data, $optionValues, true)) {
-                $optionError = true;
-            } else {
-                if($data === "4K画質対応") {
-                    $fee += 600;
+    // ----------------------------------------
+        $optionValues = ["4K画質対応", "複数デバイス視聴", "ペアレンタルコントロール"];
+        if(isset($_POST['option'])) {
+            $optionError = false;
+            
+            foreach($_POST['option'] as $data) {
+                if(!in_array($data, $optionValues, true)) {
+                    $optionError = true;
+                } else {
+                    if($data === "4K画質対応") {
+                        $fee += 600;
+                    }
                 }
             }
-        }
 
-        if(!$optionError) {
-            $_SESSION['option'] = $_POST['option'];
+            if(!$optionError) {
+                $_SESSION['option'] = $_POST['option'];
+            } else {
+                $_SESSION['errors2']['option'] = "オプションの値が不正です";
+                $formError2 = true;
+            }
         } else {
-            $_SESSION['errors2']['option'] = "オプションの値が不正です";
+            $_SESSION['option'] = [];
+        }
+    // ----------------------------------------
+        $deviceNumValues = ["2", "3", "4"];
+        if(isset($_POST['deviceNum']) && in_array($_POST['deviceNum'], $deviceNumValues, true)) {
+            if(isset($_POST['option']) && in_array("複数デバイス視聴", $_POST['option'], true)) {
+                $_SESSION['deviceNum'] = $_POST['deviceNum'];
+            } else {
+                $_SESSION['deviceNum'] = "1";
+            }
+
+            if($_SESSION['deviceNum'] === "2") {
+                $fee += 200;
+            } elseif($_SESSION['deviceNum'] === "3") {
+                $fee += 400;
+            } elseif($_SESSION['deviceNum'] === "4") {
+                $fee += 600;
+            }
+        } else {
+            $_SESSION['errors2']['deviceNum'] = "デバイス数の値が不正です";
             $formError2 = true;
         }
-    } else {
-        $_SESSION['option'] = [];
-    }
-// ----------------------------------------
-    $deviceNumValues = ["2", "3", "4"];
-    if(isset($_POST['deviceNum']) && in_array($_POST['deviceNum'], $deviceNumValues, true)) {
-        if(isset($_POST['option']) && in_array("複数デバイス視聴", $_POST['option'], true)) {
-            $_SESSION['deviceNum'] = $_POST['deviceNum'];
+    // ----------------------------------------
+        if(!empty($_POST['coupon'])) {
+            if(couponFormat($_POST['coupon']) !== false) {
+                $_SESSION['coupon'] = $_POST['coupon'];
+                $fee -= 100;
+            } else {
+                $_SESSION['errors2']['coupon'] = "クーポンの値が不正です";
+                $formError2 = true;
+            }
         } else {
-            $_SESSION['deviceNum'] = "1";
+            $_SESSION['coupon'] = "";
         }
-
-        if($_SESSION['deviceNum'] === "2") {
-            $fee += 200;
-        } elseif($_SESSION['deviceNum'] === "3") {
-            $fee += 400;
-        } elseif($_SESSION['deviceNum'] === "4") {
-            $fee += 600;
+    // ----------------------------------------
+        if($formError2) {
+            header('Location: select-plan.php');
         }
     } else {
-        $_SESSION['errors2']['deviceNum'] = "デバイス数の値が不正です";
-        $formError2 = true;
+        header('Location: index.php');
     }
-// ----------------------------------------
-    if(!empty($_POST['coupon'])) {
-        if(couponFormat($_POST['coupon']) !== false) {
-            $_SESSION['coupon'] = $_POST['coupon'];
-            $fee -= 100;
+    // ----------------------------------------
+
+    function couponFormat($text) {
+        if(preg_match("/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/", $text) === 1) {
+            return $text;
         } else {
-            $_SESSION['errors2']['coupon'] = "クーポンの値が不正です";
-            $formError2 = true;
+            return false;
         }
-    } else {
-        $_SESSION['coupon'] = "";
     }
-// ----------------------------------------
-    if($formError2) {
-        header('Location: select-plan.php');
-    }
-} else {
-    header('Location: index.php');
-}
-// ----------------------------------------
 
-function couponFormat($text) {
-    if(preg_match("/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/", $text) === 1) {
-        return $text;
-    } else {
-        return false;
-    }
-}
-
-function h($str) {
-    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-};
+    function h($str) {
+        return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+    };
 ?>
 
 <!DOCTYPE html>
@@ -117,19 +121,7 @@ function h($str) {
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1 id="service-name">
-        <a href="registration-complete.php">ViewTube Premium</a>
-    </h1>
-
-    <?php
-        // echo "<pre><h1>セッション</h1>";
-        // var_dump($_SESSION);    
-        // echo "</pre>";
-
-        // echo "<pre><h1>ポスト</h1>";
-        // var_dump($_POST);    
-        // echo "</pre>";
-    ?>
+    <h1 id="service-name">ViewTube Premium</h1>
 
     <main>
         <h3>ステップ 3/3</h3>
@@ -161,10 +153,6 @@ function h($str) {
                 <td><?php echo h($_SESSION["mail"]); ?></td>
             </tr>
             <tr>
-                <th>メールアドレス(確認)</th>
-                <td><?php echo h($_SESSION["mailCheck"]); ?></td>
-            </tr>
-            <tr>
                 <th>興味のあるジャンル</th>
                 <td><?php echo implode(", ", $_SESSION['genre']); ?></td>
             </tr>
@@ -177,35 +165,31 @@ function h($str) {
                     <?php echo h($_SESSION["plan"]); ?>
                 </td>
                 <td class="show-price">
-                    <?php
-                        if($_SESSION["plan"] === "ブロンズ") {
-                            echo "500円";
-                        } elseif($_SESSION["plan"] === "シルバー") {
-                            echo "800円";
-                        } elseif($_SESSION["plan"] === "ゴールド") {
-                            echo "1000円";
-                        }
-                    ?>
+                    <?php echo $planFee ?>円
                 </td>
             </tr>
             <?php
-                $count=1;
-                foreach($_SESSION['option'] as $data) {
-                    $deviceNum = "";
-                    if($data === "4K画質対応") {
-                        $thisOptionPrice = 600;
-                    } elseif ($data === "複数デバイス視聴") {
-                        $thisOptionPrice = 200 * $_SESSION['deviceNum'] - 200;
-                        $deviceNum = "(".$_SESSION['deviceNum']."台)";
-                    } elseif ($data === "ペアレンタルコントロール") {
-                        $thisOptionPrice = 0;
-                    }
+                if(count($_SESSION['option']) === 0) {
+                    echo "<tr><th>オプション</th><td>なし</td><td class='show-price'></td></tr>";
+                } else {
+                    $count=1;
+                    foreach($_SESSION['option'] as $data) {
+                        $deviceNum = "";
+                        if($data === "4K画質対応") {
+                            $thisOptionPrice = 600;
+                        } elseif ($data === "複数デバイス視聴") {
+                            $thisOptionPrice = 200 * $_SESSION['deviceNum'] - 200;
+                            $deviceNum = "(".$_SESSION['deviceNum']."台)";
+                        } elseif ($data === "ペアレンタルコントロール") {
+                            $thisOptionPrice = 0;
+                        }
 
-                    if(count($_SESSION['option']) === 1) {
-                        echo "<tr><th>オプション"."</th><td>".$data.$deviceNum."</td><td class='show-price'>".$thisOptionPrice."円</td></tr>";
-                    } else {
-                        echo "<tr><th>オプション".$count."</th><td>".$data.$deviceNum."</td><td class='show-price'>".$thisOptionPrice."円</td></tr>";
-                        $count+=1;
+                        if(count($_SESSION['option']) === 1) {
+                            echo "<tr><th>オプション</th><td>".$data.$deviceNum."</td><td class='show-price'>".$thisOptionPrice."円</td></tr>";
+                        } else {
+                            echo "<tr><th>オプション".$count."</th><td>".$data.$deviceNum."</td><td class='show-price'>".$thisOptionPrice."円</td></tr>";
+                            $count+=1;
+                        }
                     }
                 }
             ?>

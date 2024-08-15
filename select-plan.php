@@ -4,138 +4,138 @@
     $_SESSION['phase-select-plan'] = false;
     $jumpFrom = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
     
-if (strpos($jumpFrom, 'index.php') !== false) {
-// ====================ここからindexでの入力が正しいか====================
-    $formError = false;
-    $_SESSION['errors'] = [];
+    if ($_SESSION['phase-index'] === false || strpos($jumpFrom, 'index.php') !== false) {
+    // ====================ここからindexでの入力が正しいか====================
+        $formError = false;
+        $_SESSION['errors'] = [];
 
-// ----------------------------------------
-    if(!empty($_POST['name'])) {
-        $_SESSION['name'] = $_POST['name'];
-    } else {
-        $_SESSION['errors']['name'] = "名前が空でした";
-        $formError = true;
-    }
-// ----------------------------------------
-    if(!empty($_POST['furigana'])) {
-        $_SESSION['furigana'] = mb_convert_kana($_POST['furigana'], "SCKV");
-    } else {
-        $_SESSION['errors']['furigana'] = "フリガナが空でした";
-        $formError = true;
-    }
-// ----------------------------------------
-    $genderValues = ["男", "女"];
-    if(isset($_POST['gender']) && in_array($_POST['gender'], $genderValues, true)) {
-        $_SESSION['gender'] = $_POST['gender'];
-    } else {
-        $_SESSION['errors']['gender'] = "性別の値が不正です";
-        $formError = true;
-    }
-// ----------------------------------------
-    if(!empty($_POST['birthday'])) {
-        if(birthdayFormat($_POST['birthday'])) {
-            $birthday = new DateTime($_POST['birthday']);
-            $today = new DateTime();
-            $age = $today->diff($birthday)->y;
-            if($age <= 12) {
-                $_SESSION['errors']['birthday'] = "12歳以下の方は登録できません";
-                $formError = true;
+    // ----------------------------------------
+        if(!empty($_POST['name'])) {
+            $_SESSION['name'] = $_POST['name'];
+        } else {
+            $_SESSION['errors']['name'] = "名前が空です";
+            $formError = true;
+        }
+    // ----------------------------------------
+        if(!empty($_POST['furigana'])) {
+            $_SESSION['furigana'] = mb_convert_kana($_POST['furigana'], "SCKV");
+        } else {
+            $_SESSION['errors']['furigana'] = "フリガナが空です";
+            $formError = true;
+        }
+    // ----------------------------------------
+        $genderValues = ["男", "女"];
+        if(isset($_POST['gender']) && in_array($_POST['gender'], $genderValues, true)) {
+            $_SESSION['gender'] = $_POST['gender'];
+        } else {
+            $_SESSION['errors']['gender'] = "性別の値が不正です";
+            $formError = true;
+        }
+    // ----------------------------------------
+        if(!empty($_POST['birthday'])) {
+            if(birthdayFormat($_POST['birthday'])) {
+                $birthday = new DateTime($_POST['birthday']);
+                $today = new DateTime();
+                $age = $today->diff($birthday)->y;
+                if($age <= 12) {
+                    $_SESSION['errors']['birthday'] = "12歳以下の方は登録できません";
+                    $formError = true;
+                } else {
+                    $_SESSION['birthday'] = $_POST['birthday'];
+                }
             } else {
-                $_SESSION['birthday'] = $_POST['birthday'];
+                $_SESSION['errors']['birthday'] = "誕生日の値が不正です";
+                $formError = true;
             }
         } else {
-            $_SESSION['errors']['birthday'] = "誕生日の値が不正です";
+            $_SESSION['errors']['birthday'] = "誕生日が空です";
             $formError = true;
         }
-    } else {
-        $_SESSION['errors']['birthday'] = "誕生日が空でした";
-        $formError = true;
-    }
-// ----------------------------------------
-    if(!empty($_POST['mail'])) {
-        if(mailFormat($_POST['mail'])) {
-            $_SESSION['mail'] = $_POST['mail'];
-        } else {
-            $_SESSION['errors']['mail'] = "メールアドレスの値が不正です";
-            $formError = true;
-        }
-    } else {
-        $_SESSION['errors']['mail'] = "メールアドレスが空でした";
-        $formError = true;
-    }
-// ----------------------------------------
-    if(!empty($_POST['mailCheck'])) {
-        if($_POST['mailCheck'] === $_POST['mail']) {
-            $_SESSION['mailCheck'] = $_POST['mailCheck'];
-        } else {
-            $_SESSION['errors']['mailCheck'] = "メールアドレスとメールアドレス(確認)が一致しません";
-            $formError = true;
-        }
-        if(mailFormat($_POST['mailCheck'])) {
-            $_SESSION['mailCheck'] = $_POST['mailCheck'];
-        } else {
-            $_SESSION['errors']['mailCheck'] = "メールアドレス(確認)の値が不正です";
-            $formError = true;
-        }
-    } else {
-        $_SESSION['errors']['mailCheck'] = "メールアドレス(確認)が空でした";
-        $formError = true;
-    }
-// ----------------------------------------
-    if(isset($_POST['genre'])) {
-        $genreValues = ["洋画", "邦画", "アニメ", "ドラマ", "ドキュメンタリー", "ホラー", "バラエティ"];
-        $genreError = false;
-        
-        foreach($_POST['genre'] as $data) {
-            if(!in_array($data, $genreValues, true)) {
-                $genreError = true;
+    // ----------------------------------------
+        if(!empty($_POST['mail'])) {
+            if(mailFormat($_POST['mail'])) {
+                $_SESSION['mail'] = $_POST['mail'];
+            } else {
+                $_SESSION['errors']['mail'] = "メールアドレスの値が不正です";
+                $formError = true;
             }
-        }
-
-        if(!$genreError) {
-            $_SESSION['genre'] = $_POST['genre'];
         } else {
-            $_SESSION['errors']['genre'] = "興味のあるジャンルの値が不正です";
+            $_SESSION['errors']['mail'] = "メールアドレスが空です";
             $formError = true;
         }
-    } else {
-        $_SESSION['errors']['genre'] = "一つ以上選択してください";
-        $formError = true;
-    }
-// ----------------------------------------
-    if($formError) {
-        header('Location: index.php');
-    }
-// } elseif(strpos($jumpFrom, 'confirm.php') !== false) {
-// } else {
-    // header('Location: index.php');
-}
-// ----------------------------------------
-
-    function h($str) {
-        return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-    };
-
-    function birthdayFormat($date){
-        if(!preg_match('/^(19|20)[0-9]{2}\-\d{2}\-\d{2}$/', $date)){
-            return false;
+    // ----------------------------------------
+        if(!empty($_POST['mailCheck'])) {
+            if($_POST['mailCheck'] === $_POST['mail']) {
+                $_SESSION['mailCheck'] = $_POST['mailCheck'];
+            } else {
+                $_SESSION['errors']['mailCheck'] = "メールアドレスとメールアドレス(確認)が一致しません";
+                $formError = true;
+            }
+            if(mailFormat($_POST['mailCheck'])) {
+                $_SESSION['mailCheck'] = $_POST['mailCheck'];
+            } else {
+                $_SESSION['errors']['mailCheck'] = "メールアドレス(確認)の値が不正です";
+                $formError = true;
+            }
+        } else {
+            $_SESSION['errors']['mailCheck'] = "メールアドレス(確認)が空です";
+            $formError = true;
         }
-        list($y, $m, $d) = explode('-', $date);
-        if(!checkdate($m, $d, $y)){
-            return false;
-        }
-        return true;
-    }
+    // ----------------------------------------
+        if(isset($_POST['genre'])) {
+            $genreValues = ["洋画", "邦画", "アニメ", "ドラマ", "ドキュメンタリー", "ホラー", "バラエティ"];
+            $genreError = false;
+            
+            foreach($_POST['genre'] as $data) {
+                if(!in_array($data, $genreValues, true)) {
+                    $genreError = true;
+                }
+            }
 
-    function mailFormat($text) {
-        if(preg_match("/^[A-Za-z0-9.\-_+@]+$/", $text) === 1) {
+            if(!$genreError) {
+                $_SESSION['genre'] = $_POST['genre'];
+            } else {
+                $_SESSION['errors']['genre'] = "興味のあるジャンルの値が不正です";
+                $formError = true;
+            }
+        } else {
+            $_SESSION['errors']['genre'] = "一つ以上選択してください";
+            $formError = true;
+        }
+    // ----------------------------------------
+        if($formError) {
+            header('Location: index.php');
+        }
+    // } elseif(strpos($jumpFrom, 'confirm.php') !== false) {
+    // } else {
+        // header('Location: index.php');
+    }
+    // ----------------------------------------
+
+        function h($str) {
+            return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+        };
+
+        function birthdayFormat($date){
+            if(!preg_match('/^(19|20)[0-9]{2}\-\d{2}\-\d{2}$/', $date)){
+                return false;
+            }
+            list($y, $m, $d) = explode('-', $date);
+            if(!checkdate($m, $d, $y)){
+                return false;
+            }
             return true;
-        } else {
-            return false;
         }
-    }
 
-// ====================ここからプラン関係====================
+        function mailFormat($text) {
+            if(preg_match("/^[A-Za-z0-9.\-_+@]+$/", $text) === 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    // ====================ここからプラン関係====================
         $errors2 = [
             "plan" => "",
             "option" => "",
@@ -200,23 +200,11 @@ if (strpos($jumpFrom, 'index.php') !== false) {
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1 id="service-name">
-        <a href="registration-complete.php">ViewTube Premium</a>
-    </h1>
-
-    <?php
-        // echo "<pre><h1>セッション</h1>";
-        // var_dump($_SESSION);    
-        // echo "</pre>";
-
-        // echo "<pre><h1>ポスト</h1>";
-        // var_dump($_POST);    
-        // echo "</pre>";
-    ?>
+    <h1 id="service-name">ViewTube Premium</h1>
 
     <main>
         <h3>ステップ 2/3</h3>
-        <h1>プラン・オプションの選択</h1>
+        <h1>プラン・オプションを選択</h1>
 
         <form action="confirm.php" method="POST">
             <div class="input-item">

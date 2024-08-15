@@ -76,7 +76,7 @@ table {
 
 .note {
     /* 入力項目の補足 */
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .required {
@@ -91,7 +91,7 @@ table {
 .error-message {
     /* 入力した情報の形式が間違ってたりしたらのエラーメッセージ */
     color: red;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 input[type="text"], input[type="date"] {
@@ -164,7 +164,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .checkbox-group-genre {
     /* ジャンル選択部分のdiv */
     display: flex;
-    padding: 10px 0;
+    padding-top: 10px;
     width: 100%;
     flex-wrap: wrap;
 }
@@ -190,6 +190,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .checkbox-option-genre:nth-child(even) label {
     margin-left: 10px;
+}
+
+.checkbox-option-genre:last-child label {
+    margin-bottom: 0;
 }
 
 .checkbox-option-genre label:has(input[type="checkbox"]:checked) {
@@ -430,6 +434,7 @@ th {
 
     background: linear-gradient(140deg, red,orange,yellow,green,aqua,blue,purple);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 
     animation: fancyDisplay 4s linear infinite;
