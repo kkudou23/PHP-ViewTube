@@ -11,15 +11,15 @@ if (strpos($jumpFrom, 'select-plan.php') !== false) {
     $fee = 0;
 
 // ----------------------------------------
-    $planValues = ["bronze", "silver", "gold"];
+    $planValues = ["ブロンズ", "シルバー", "ゴールド"];
     if(isset($_POST['plan']) && in_array($_POST['plan'], $planValues, true)) {
         $_SESSION['plan'] = $_POST['plan'];
         
-        if($_POST['plan'] === "bronze") {
+        if($_POST['plan'] === "ブロンズ") {
             $fee += 500;
-        } elseif($_POST['plan'] === "silver") {
+        } elseif($_POST['plan'] === "シルバー") {
             $fee += 800;
-        } elseif($_POST['plan'] === "gold") {
+        } elseif($_POST['plan'] === "ゴールド") {
             $fee += 1000;
         }
     } else {
@@ -27,7 +27,7 @@ if (strpos($jumpFrom, 'select-plan.php') !== false) {
         $formError2 = true;
     }
 // ----------------------------------------
-    $optionValues = ["4k", "multiDevice", "parentalControl"];
+    $optionValues = ["4K画質対応", "複数デバイス視聴", "ペアレンタルコントロール"];
     if(isset($_POST['option'])) {
         $optionError = false;
         
@@ -35,7 +35,7 @@ if (strpos($jumpFrom, 'select-plan.php') !== false) {
             if(!in_array($data, $optionValues, true)) {
                 $optionError = true;
             } else {
-                if($data === "4k") {
+                if($data === "4K画質対応") {
                     $fee += 600;
                 }
             }
@@ -53,7 +53,7 @@ if (strpos($jumpFrom, 'select-plan.php') !== false) {
 // ----------------------------------------
     $deviceNumValues = ["2", "3", "4"];
     if(isset($_POST['deviceNum']) && in_array($_POST['deviceNum'], $deviceNumValues, true)) {
-        if(isset($_POST['option']) && in_array("multiDevice", $_POST['option'], true)) {
+        if(isset($_POST['option']) && in_array("複数デバイス視聴", $_POST['option'], true)) {
             $_SESSION['deviceNum'] = $_POST['deviceNum'];
         } else {
             $_SESSION['deviceNum'] = "1";
@@ -110,90 +110,130 @@ function h($str) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>確認画面</title>
-    <style>
-        p {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <?php
-        echo "<pre><h1>セッション</h1>";
-        var_dump($_SESSION);    
-        echo "</pre>";
+    <h1 id="service-name">
+        <a href="registration-complete.php">ViewTube Premium</a>
+    </h1>
 
-        echo "<pre><h1>ポスト</h1>";
-        var_dump($_POST);    
-        echo "</pre>";
+    <?php
+        // echo "<pre><h1>セッション</h1>";
+        // var_dump($_SESSION);    
+        // echo "</pre>";
+
+        // echo "<pre><h1>ポスト</h1>";
+        // var_dump($_POST);    
+        // echo "</pre>";
     ?>
-    
-    <table border=1>
-        <tr>
-            <th>氏名</th>
-            <td><?php echo h($_SESSION["name"]); ?></td>
-        </tr>
-        <tr>
-            <th>フリガナ</th>
-            <td><?php echo h($_SESSION["furigana"]); ?></td>
-        </tr>
-        <tr>
-            <th>性別</th>
-            <td><?php echo $_SESSION["gender"]; ?></td>
-        </tr>
-        <tr>
-            <th>生年月日</th>
-            <td><?php echo h($_SESSION["birthday"]); ?></td>
-        </tr>
-        <tr>
-            <th>メールアドレス</th>
-            <td><?php echo h($_SESSION["mail"]); ?></td>
-        </tr>
-        <tr>
-            <th>メールアドレス(確認)</th>
-            <td><?php echo h($_SESSION["mailCheck"]); ?></td>
-        </tr>
-        <tr>
-            <th>興味のあるジャンル</th>
-            <td><?php echo implode(", ", $_SESSION['genre']); ?></td>
-        </tr>
-    </table>
-    <br>
-    <table border=1>
-        <tr>
-            <th>基本プラン</th>
-            <td>
-                <?php echo h($_SESSION["plan"]); ?>
-            </td>
-        </tr>
-        <tr>
-            <th>オプション</th>
-            <td>
-                <?php echo implode(", ", $_SESSION['option']); ?>
-            </td>
-        </tr>
-        <tr>
-            <th>台数</th>
-            <td>
-                <?php echo h($_SESSION["deviceNum"]); ?>
-            </td>
-        </tr>
-        <tr>
-            <th>クーポンコード</th>
-            <td>
-                <?php echo h($_SESSION["coupon"]); ?>
-            </td>
-        </tr>
-        <tr>
-            <th><h1>料金</h1></th>
-            <td>
-                <h1><?php echo $fee ?></h1>
-            </td>
-        </tr>
-        <tr>
-            <th><a href="index.php">indexに戻る</a></th>
-            <td><a href="select-plan.php">プラン・オプションの選択に戻る</a></td>
-        </tr>
-    </table>
-    <a href="registration-complete.php">セッションを削除する</a>
+
+    <main>
+        <h3>ステップ 3/3</h3>
+        <h1>入力した情報を確認</h1>
+
+        <table>
+            <tr>
+                <th>氏名</th>
+                <td><?php echo h($_SESSION["name"]); ?></td>
+            </tr>
+            <tr>
+                <th>フリガナ</th>
+                <td><?php echo h($_SESSION["furigana"]); ?></td>
+            </tr>
+            <tr>
+                <th>性別</th>
+                <td><?php echo $_SESSION["gender"] ?></td>
+            </tr>
+            <tr>
+                <th>生年月日</th>
+                <td>
+                    <?php
+                        echo date("Y年n月j日", strtotime($_SESSION["birthday"]));
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <th>メールアドレス</th>
+                <td><?php echo h($_SESSION["mail"]); ?></td>
+            </tr>
+            <tr>
+                <th>メールアドレス(確認)</th>
+                <td><?php echo h($_SESSION["mailCheck"]); ?></td>
+            </tr>
+            <tr>
+                <th>興味のあるジャンル</th>
+                <td><?php echo implode(", ", $_SESSION['genre']); ?></td>
+            </tr>
+        </table>
+        <a href="index.php" class="button gray-button">個人情報の修正</a>
+        <table class="plan-table">
+            <tr>
+                <th>基本プラン</th>
+                <td>
+                    <?php echo h($_SESSION["plan"]); ?>
+                </td>
+                <td class="show-price">
+                    <?php
+                        if($_SESSION["plan"] === "ブロンズ") {
+                            echo "500円";
+                        } elseif($_SESSION["plan"] === "シルバー") {
+                            echo "800円";
+                        } elseif($_SESSION["plan"] === "ゴールド") {
+                            echo "1000円";
+                        }
+                    ?>
+                </td>
+            </tr>
+            <?php
+                $count=1;
+                foreach($_SESSION['option'] as $data) {
+                    $deviceNum = "";
+                    if($data === "4K画質対応") {
+                        $thisOptionPrice = 600;
+                    } elseif ($data === "複数デバイス視聴") {
+                        $thisOptionPrice = 200 * $_SESSION['deviceNum'] - 200;
+                        $deviceNum = "(".$_SESSION['deviceNum']."台)";
+                    } elseif ($data === "ペアレンタルコントロール") {
+                        $thisOptionPrice = 0;
+                    }
+
+                    if(count($_SESSION['option']) === 1) {
+                        echo "<tr><th>オプション"."</th><td>".$data.$deviceNum."</td><td class='show-price'>".$thisOptionPrice."円</td></tr>";
+                    } else {
+                        echo "<tr><th>オプション".$count."</th><td>".$data.$deviceNum."</td><td class='show-price'>".$thisOptionPrice."円</td></tr>";
+                        $count+=1;
+                    }
+                }
+            ?>
+
+            <tr>
+                <th>クーポンコード</th>
+                <td>
+                    <?php
+                    if($_SESSION["coupon"] === "") {
+                        echo "なし";
+                    } else {
+                        echo "あり(".$_SESSION["coupon"].")<td class='show-price'>-100円</td>";
+                    }
+                    ?>
+                </td>
+            </tr>
+        </table>
+        <h1 class="monthly-fee">
+            <span>月額利用料</span><?php echo $fee ?><span>円</span>
+        </h1>
+        
+        <div class="button-container">
+            <a href="select-plan.php" class="button gray-button">プラン・オプションの修正</a>
+            <a href="registration-complete.php" class="button">登録完了</a>
+        </div>
+    </main>
+    <footer>
+        <p>2024 - PHP夏季課題</p>
+    </footer>
 </body>
 </html>

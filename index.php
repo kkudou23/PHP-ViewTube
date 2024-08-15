@@ -28,10 +28,10 @@
 // ----------------------------------------
     $furigana = isset($_SESSION['furigana']) ? $_SESSION['furigana'] : "";
 // ----------------------------------------
-    $gender = isset($_SESSION['gender']) ? $_SESSION['gender'] : "male";
+    $gender = isset($_SESSION['gender']) ? $_SESSION['gender'] : "男";
     $genderCheck = [
-        "male" => "",
-        "female" => "",
+        "男" => "",
+        "女" => "",
     ];
     $genderCheck[$gender] = "checked";
 // ----------------------------------------
@@ -43,13 +43,13 @@
 // ----------------------------------------
     $genre = isset($_SESSION['genre']) ? $_SESSION['genre'] : [];
     $genreCheck = [
-        "western" => "",
-        "japanese" => "",
-        "anime" => "",
-        "drama" => "",
-        "documentary" => "",
-        "horror" => "",
-        "variety" => "",
+        "洋画" => "",
+        "邦画" => "",
+        "アニメ" => "",
+        "ドラマ" => "",
+        "ドキュメンタリー" => "",
+        "ホラー" => "",
+        "バラエティ" => "",
     ];
     foreach($genre as $data) {
         $genreCheck[$data] = "checked";
@@ -67,84 +67,134 @@ if (isset($_SESSION['errors']) && count($_SESSION['errors']) === 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>利用者の個人情報入力画面</title>
-    <style>
-        p {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <?php 
-        echo "<pre><h1>セッション</h1>";
-        var_dump($_SESSION);    
-        echo "</pre>";
+    <h1 id="service-name">
+        <a href="registration-complete.php">ViewTube Premium</a>
+    </h1>
 
-        echo "<pre><h1>ポスト</h1>";
-        var_dump($_POST);    
-        echo "</pre>";
+    <?php
+        // echo "<pre><h1>セッション</h1>";
+        // var_dump($_SESSION);    
+        // echo "</pre>";
+
+        // echo "<pre><h1>ポスト</h1>";
+        // var_dump($_POST);    
+        // echo "</pre>";
     ?>
+    
+    <main>
+        <h3>ステップ 1/3</h3>
+        <h1>個人情報を入力</h1>
 
-    <form action="select-plan.php" method="POST">
-        <table border=1>
-            <tr>
-                <th>氏名</th>
-                <td>
-                    <input type="text" name="name" value="<?php echo $name; ?>" placeholder="氏名をここに入力" required>
-                    <p><?php echo $errors['name'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>フリガナ</th>
-                <td>
-                    <input type="text" name="furigana" value="<?php echo $furigana; ?>" placeholder="フリガナをここに入力" required>
-                    <p><?php echo $errors['furigana'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>性別</th>
-                <td>
-                    <label><input type="radio" name="gender" value="male" <?php echo $genderCheck['male']; ?>>男</label>
-                    <label><input type="radio" name="gender" value="female" <?php echo $genderCheck['female']; ?>>女</label>
-                    <p><?php echo $errors['gender'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>生年月日</th>
-                <td>
+        <form action="select-plan.php" method="POST">
+            <div class="input-item">
+                <label>
+                    <p class="input-label">氏名<span class="required">必須</span></p>
+                    <input type="text" name="name" value="<?php echo $name; ?>" placeholder="例 : 山田太郎" required>
+                    <p class="error-message"><?php echo $errors['name'] ?></p>
+                </label>
+            </div>
+            
+
+            <div class="input-item">
+                <label>
+                    <p class="input-label">フリガナ<span class="required">必須</span></p>
+                    <input type="text" name="furigana" value="<?php echo $furigana; ?>" placeholder="例 : ヤマダタロウ" required>
+                    <p class="error-message"><?php echo $errors['furigana'] ?></p>
+                </label>
+            </div>
+
+            <div class="input-item">
+                <p class="input-label">性別</p>
+                <div class="radio-group-gender">
+                    <div class="radio-option-gender">
+                        <input type="radio" name="gender" id="male" value="男" <?php echo $genderCheck['男']; ?>>
+                        <label for="male">男</label>
+                    </div>
+                    <div class="radio-option-gender">
+                        <input type="radio" name="gender" id="female" value="女" <?php echo $genderCheck['女']; ?>>
+                        <label for="female">女</label>
+                    </div>
+                </div>
+                <p class="error-message"><?php echo $errors['gender'] ?></p>
+            </div>
+
+            <div class="input-item">
+                <label>
+                    <p class="input-label">生年月日<span class="required">必須</span></p>
                     <input type="date" name="birthday" value="<?php echo $birthday; ?>" required>
-                    <p><?php echo $errors['birthday'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>メールアドレス</th>
-                <td>
-                    <input type="text" name="mail" value="<?php echo $mail; ?>" placeholder="メールアドレスをここに入力" required>
-                    <p><?php echo $errors['mail'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>メールアドレス(確認)</th>
-                <td>
-                    <input type="text" name="mailCheck" value="<?php echo $mailCheck; ?>" placeholder="確認のためメールアドレスを再度入力" required>
-                    <p><?php echo $errors['mailCheck'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>興味のあるジャンル</th>
-                <td>
-                    <label><input type="checkbox" name="genre[]" value="western" <?php echo $genreCheck["western"]; ?>>洋画</label>
-                    <label><input type="checkbox" name="genre[]" value="japanese" <?php echo $genreCheck["japanese"]; ?>>邦画</label>
-                    <label><input type="checkbox" name="genre[]" value="anime" <?php echo $genreCheck["anime"]; ?>>アニメ</label>
-                    <label><input type="checkbox" name="genre[]" value="drama" <?php echo $genreCheck["drama"]; ?>>ドラマ</label>
-                    <label><input type="checkbox" name="genre[]" value="documentary" <?php echo $genreCheck["documentary"]; ?>>ドキュメンタリー</label>
-                    <label><input type="checkbox" name="genre[]" value="horror" <?php echo $genreCheck["horror"]; ?>>ホラー</label>
-                    <label><input type="checkbox" name="genre[]" value="variety" <?php echo $genreCheck["variety"]; ?>>バラエティ</label>
-                    <p><?php echo $errors['genre'] ?></p>
-                </td>
-            </tr>
-        </table>
-        <input type="submit">
-    </form>
-    <a href="registration-complete.php">セッションを削除する</a>
+                    <p class="error-message"><?php echo $errors['birthday'] ?></p>
+                </label>
+            </div>
+
+            <div class="input-item">
+                <label>
+                    <p class="input-label">メールアドレス<span class="required">必須</span></p>
+                    <input type="text" name="mail" value="<?php echo $mail; ?>" placeholder="例 : YamadaTaro@sample.com" required>
+                    <p class="error-message"><?php echo $errors['mail'] ?></p>
+                </label>
+            </div>
+
+            <div class="input-item">
+                <label>
+                    <p class="input-label">メールアドレス(確認)<span class="required">必須</span></p>
+                    <input type="text" name="mailCheck" value="<?php echo $mailCheck; ?>" placeholder="メールアドレスを再度入力してください" required>
+                    <p class="error-message"><?php echo $errors['mailCheck'] ?></p>
+                </label>
+            </div>
+
+            <div class="input-item">
+                <p class="input-label">興味のあるジャンル<span class="note">(一つ以上選択してください)</span></p>
+                <div class="checkbox-group-genre">
+                    <div class="checkbox-option-genre">
+                        <label>
+                            <input type="checkbox" name="genre[]" id="western" value="洋画" <?php echo $genreCheck["洋画"]; ?>>洋画
+                        </label>
+                    </div>
+                    <div class="checkbox-option-genre">
+                        <label>
+                            <input type="checkbox" name="genre[]" id="japanese" value="邦画" <?php echo $genreCheck["邦画"]; ?>>邦画
+                        </label>
+                    </div>
+                    <div class="checkbox-option-genre">
+                        <label>
+                            <input type="checkbox" name="genre[]" id="anime" value="アニメ" <?php echo $genreCheck["アニメ"]; ?>>アニメ
+                        </label>
+                    </div>
+                    <div class="checkbox-option-genre">
+                        <label> 
+                            <input type="checkbox" name="genre[]" id="drama" value="ドラマ" <?php echo $genreCheck["ドラマ"]; ?>>ドラマ
+                        </label>
+                    </div>
+                    <div class="checkbox-option-genre">
+                        <label>
+                            <input type="checkbox" name="genre[]" id="documentary" value="ドキュメンタリー" <?php echo $genreCheck["ドキュメンタリー"]; ?>>ドキュメンタリー
+                        </label>
+                    </div>
+                    <div class="checkbox-option-genre">
+                        <label>
+                            <input type="checkbox" name="genre[]" id="horror" value="ホラー" <?php echo $genreCheck["ホラー"]; ?>>ホラー
+                        </label>
+                    </div>
+                    <div class="checkbox-option-genre">
+                        <label>
+                            <input type="checkbox" name="genre[]" id="variety" value="バラエティ" <?php echo $genreCheck["バラエティ"]; ?>>バラエティ
+                        </label>
+                    </div>
+                </div>
+                <p class="error-message"><?php echo $errors['genre'] ?></p>
+            </div>
+            <input type="submit" value="プランの選択" class="button">
+        </form>
+    </main>
+    <footer>
+        <p>2024 - PHP夏季課題</p>
+    </footer>
 </body>
 </html>

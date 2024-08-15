@@ -24,7 +24,7 @@ if (strpos($jumpFrom, 'index.php') !== false) {
         $formError = true;
     }
 // ----------------------------------------
-    $genderValues = ["male", "female"];
+    $genderValues = ["男", "女"];
     if(isset($_POST['gender']) && in_array($_POST['gender'], $genderValues, true)) {
         $_SESSION['gender'] = $_POST['gender'];
     } else {
@@ -83,7 +83,7 @@ if (strpos($jumpFrom, 'index.php') !== false) {
     }
 // ----------------------------------------
     if(isset($_POST['genre'])) {
-        $genreValues = ["western", "japanese", "anime", "drama", "documentary", "horror", "variety"];
+        $genreValues = ["洋画", "邦画", "アニメ", "ドラマ", "ドキュメンタリー", "ホラー", "バラエティ"];
         $genreError = false;
         
         foreach($_POST['genre'] as $data) {
@@ -99,7 +99,7 @@ if (strpos($jumpFrom, 'index.php') !== false) {
             $formError = true;
         }
     } else {
-        $_SESSION['errors']['genre'] = "興味のあるジャンルは最低でも一つ以上選択してください";
+        $_SESSION['errors']['genre'] = "一つ以上選択してください";
         $formError = true;
     }
 // ----------------------------------------
@@ -150,19 +150,19 @@ if (strpos($jumpFrom, 'index.php') !== false) {
             $errors2['coupon'] = isset($_SESSION['errors2']['coupon']) ? $_SESSION['errors2']['coupon'] : "";
         }
     // ----------------------------------------
-        $plan = isset($_SESSION['plan']) ? $_SESSION['plan'] : "bronze";
+        $plan = isset($_SESSION['plan']) ? $_SESSION['plan'] : "ブロンズ";
         $planCheck = [
-            "bronze" => "",
-            "silver" => "",
-            "gold" => "",
+            "ブロンズ" => "",
+            "シルバー" => "",
+            "ゴールド" => "",
         ];
         $planCheck[$plan] = "checked";
     // ----------------------------------------
         $option = isset($_SESSION['option']) ? $_SESSION['option'] : [];
         $optionCheck = [
-            "4k" => "",
-            "multiDevice" => "",
-            "parentalControl" => "",
+            "4K画質対応" => "",
+            "複数デバイス視聴" => "",
+            "ペアレンタルコントロール" => "",
         ];
         foreach($option as $data) {
             $optionCheck[$data] = "checked";
@@ -193,101 +193,103 @@ if (strpos($jumpFrom, 'index.php') !== false) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>プラン・オプション選択画面</title>
-    <style>
-        p {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <?php 
-        echo "<pre><h1>セッション</h1>";
-        var_dump($_SESSION);
-        echo "</pre>";
+    <h1 id="service-name">
+        <a href="registration-complete.php">ViewTube Premium</a>
+    </h1>
 
-        echo "<pre><h1>ポスト</h1>";
-        var_dump($_POST);    
-        echo "</pre>";
+    <?php
+        // echo "<pre><h1>セッション</h1>";
+        // var_dump($_SESSION);    
+        // echo "</pre>";
 
-        echo "<pre><h1>deviceNumCheck</h1>";
-        var_dump($deviceNumCheck["2"]);    
-        var_dump($deviceNumCheck["3"]);    
-        var_dump($deviceNumCheck["4"]);    
-        echo "</pre>";
+        // echo "<pre><h1>ポスト</h1>";
+        // var_dump($_POST);    
+        // echo "</pre>";
     ?>
 
-    <table border=1>
-        <tr>
-            <th>氏名</th>
-            <td><?php echo h($_SESSION["name"]); ?></td>
-        </tr>
-        <tr>
-            <th>フリガナ</th>
-            <td><?php echo h($_SESSION["furigana"]); ?></td>
-        </tr>
-        <tr>
-            <th>性別</th>
-            <td><?php echo $_SESSION["gender"]; ?></td>
-        </tr>
-        <tr>
-            <th>生年月日</th>
-            <td><?php echo h($_SESSION["birthday"]); ?></td>
-        </tr>
-        <tr>
-            <th>メールアドレス</th>
-            <td><?php echo h($_SESSION["mail"]); ?></td>
-        </tr>
-        <tr>
-            <th>メールアドレス(確認)</th>
-            <td><?php echo h($_SESSION["mailCheck"]); ?></td>
-        </tr>
-        <tr>
-            <th>興味のあるジャンル</th>
-            <td><?php echo implode(", ", $_SESSION['genre']); ?></td>
-        </tr>
-    </table>
-<br>
-    <form action="confirm.php" method="POST">
-        <table border=1>
-            <tr>
-                <th>基本プランの選択</th>
-                <td>
-                    <label><input type="radio" name="plan" value="bronze" <?php echo $planCheck['bronze']; ?>>ブロンズ(基本プラン 500円/月)</label><br>
-                    <label><input type="radio" name="plan" value="silver" <?php echo $planCheck['silver']; ?>>シルバー(基本に加えさらに高画質 800円/月)</label><br>
-                    <label><input type="radio" name="plan" value="gold" <?php echo $planCheck['gold']; ?>>ゴールド(高画質でさらに最新作をお届け 1000円/月)</label>
-                    <p><?php echo $errors2['plan'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>オプションの選択</th>
-                <td>
-                    <label><input type="checkbox" name="option[]" value="4k" <?php echo $optionCheck["4k"]; ?>>4K画質対応(+600円)</label><br>
-                    <label><input type="checkbox" name="option[]" value="multiDevice" <?php echo $optionCheck["multiDevice"]; ?> id="multiDevice">複数デバイス視聴</label><br>
-                    <select name="deviceNum" id="deviceNum">
-                        <option value="2" <?php echo $deviceNumCheck["2"]; ?>>2台</option>
-                        <option value="3" <?php echo $deviceNumCheck["3"]; ?>>3台</option>
-                        <option value="4" <?php echo $deviceNumCheck["4"]; ?>>4台</option>
-                    </select>
-                    <p><?php echo $errors2['deviceNum'] ?></p>
-                    <label><input type="checkbox" name="option[]" value="parentalControl" <?php echo $optionCheck["parentalControl"]; ?>>ペアレンタルコントロール</label><br>
-                    <p><?php echo $errors2['option'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th>クーポンコードの利用</th>
-                <td>
-                    <input type="text" name="coupon" value="<?php echo $coupon; ?>" placeholder="クーポンがあれば入力">
-                    <p><?php echo $errors2['coupon'] ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th><a href="index.php">個人情報の修正</a></th>
-                <td><input type="submit" value="登録内容の確認"></td>
-            </tr>
-        </table>
-    </form>
-    <a href="registration-complete.php">セッションを削除する</a>
+    <main>
+        <h3>ステップ 2/3</h3>
+        <h1>プラン・オプションの選択</h1>
 
+        <form action="confirm.php" method="POST">
+            <div class="input-item">
+                <p class="input-label">基本プランの選択</p>
+                <div class="radio-group-plan">
+                    <div class="radio-option-plan">
+                        <input type="radio" name="plan" id="bronze" value="ブロンズ" <?php echo $planCheck['ブロンズ']; ?>>
+                        <label for="bronze" id="label-bronze">ブロンズ<br><span class="plan-about">(基本プラン 500円/月)</span></label>
+                    </div>
+                    <div class="radio-option-plan">
+                        <input type="radio" name="plan" id="silver" value="シルバー" <?php echo $planCheck['シルバー']; ?>>
+                        <label for="silver" id="label-silver">シルバー<br><span class="plan-about">(基本に加えさらに高画質 800円/月)</span></label>
+                    </div>
+                    <div class="radio-option-plan">
+                        <input type="radio" name="plan" id="gold" value="ゴールド" <?php echo $planCheck['ゴールド']; ?>>
+                        <label for="gold" id="label-gold">ゴールド<br><span class="plan-about">(高画質でさらに最新作をお届け 1000円/月)</span></label>
+                    </div>
+                </div>
+                <p class="error-message"><?php echo $errors2['plan'] ?></p>
+            </div>
+
+            <div class="input-item">
+                <p class="input-label">オプションの選択</p>
+                <div class="checkbox-group-option">
+                    <div class="checkbox-option-option">
+                        <label>
+                            <input type="checkbox" name="option[]" value="4K画質対応" <?php echo $optionCheck["4K画質対応"]; ?>>4K画質対応<span class="note">(+600円)</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-option-option">
+                        <label>
+                            <input type="checkbox" name="option[]" value="複数デバイス視聴" <?php echo $optionCheck["複数デバイス視聴"]; ?> id="multiDevice">複数デバイス視聴<span class="note">(一台追加につき+200円)</span>
+                            <select name="deviceNum" id="deviceNum">
+                                <option value="2" <?php echo $deviceNumCheck["2"]; ?>>2台(+200円)</option>
+                                <option value="3" <?php echo $deviceNumCheck["3"]; ?>>3台(+400円)</option>
+                                <option value="4" <?php echo $deviceNumCheck["4"]; ?>>4台(+600円)</option>
+                            </select>
+                        </label>
+                        <p><?php echo $errors2['deviceNum'] ?></p>
+                    </div>
+                    <div class="checkbox-option-option">
+                        <label>
+                            <input type="checkbox" name="option[]" value="ペアレンタルコントロール" <?php echo $optionCheck["ペアレンタルコントロール"]; ?>>ペアレンタルコントロール<span class="note">(無料)</span>
+                        </label>
+                    </div>
+                </div>
+                <p class="error-message"><?php echo $errors2['option'] ?></p>
+            </div>
+
+            <div class="input-item">
+                <label>
+                    <p class="input-label">クーポンコードの利用<br><span class="note">クーポンコードをお持ちの場合は入力してください</span></p>
+                    <input type="text" name="coupon" value="<?php echo $coupon; ?>" placeholder="例 : A1B2-3C4D-EF56-78GH">
+                    <p class="error-message"><?php echo $errors2['coupon'] ?></p>
+                </label>
+            </div>
+
+            <div class="button-container">
+                <input type="submit" value="登録内容の確認" class="button"></input>
+                <a href="index.php" class="button gray-button">個人情報の修正
+                    <?php 
+                        if($_SESSION['phase-select-plan'] === false) {
+                            echo "<br><span class='note'>※このページで入力した情報はリセットされます</span>";
+                        }
+                    ?>    
+                </a>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <p>2024 - PHP夏季課題</p>
+    </footer>
+    
     <script>
         const multiDevice = document.getElementById('multiDevice');
         const deviceNum = document.getElementById('deviceNum');
