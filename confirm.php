@@ -205,7 +205,7 @@
                     if($_SESSION["coupon"] === "") {
                         echo "なし";
                     } else {
-                        echo "あり(".$_SESSION["coupon"].")<td class='show-price'>-100円</td>";
+                        echo "あり(".$_SESSION["coupon"].")</td><td class='show-price'>-100円";
                     }
                     ?>
                 </td>
