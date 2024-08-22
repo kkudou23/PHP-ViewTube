@@ -127,7 +127,7 @@
                 <label>
                     <p class="input-label">メールアドレス<span class="required">必須</span></p>
                     <p class="error-message"><?php echo $errors['mail'] ?></p>
-                    <input type="text" name="mail" value="<?php echo $mail; ?>" placeholder="例 : YamadaTaro@sample.com" required>
+                    <input type="email" name="mail" value="<?php echo $mail; ?>" placeholder="例 : YamadaTaro@sample.com" required>
                 </label>
             </div>
 
@@ -135,7 +135,7 @@
                 <label>
                     <p class="input-label">メールアドレス(確認)<span class="required">必須</span></p>
                     <p class="error-message"><?php echo $errors['mailCheck'] ?></p>
-                    <input type="text" name="mailCheck" value="<?php echo $mailCheck; ?>" placeholder="メールアドレスを再度入力してください" required>
+                    <input type="email" name="mailCheck" value="<?php echo $mailCheck; ?>" placeholder="メールアドレスを再度入力してください" required>
                 </label>
             </div>
 
